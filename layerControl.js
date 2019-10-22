@@ -8,7 +8,7 @@ layerControl.prototype.onAdd = function(map) {
   return this._container;
 };
 
-layerControl.prototype.onRemove() {
+layerControl.prototype.onRemove = function(map) {
   this._container.parentNode.removeChild(this._container);
   this._map = undefined;
 };

@@ -10,10 +10,10 @@ To Do:
 * [ ] ADD CSS FRAMEWORK STYLING
 * [ ] ADD COLLAPSIBLE GROUP HEADINGS
 
-![example/simple.html](grouped.jpg)
+![](grouped.jpg)
 
 
-![example/grouped.html](simple.jpg)
+![](simple.jpg)
 
 
 ```javascript

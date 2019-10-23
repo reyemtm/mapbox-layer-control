@@ -37,6 +37,11 @@ class layerControlGrouped {
     for (let i = 0; i < this._layers.length; i++) {
       let layer = this._layers[i];
 
+      if (layer.directory) {
+        //create a collapsible directory to hold the groups this directory will not have the ability toggle the layers
+        console.log(layer.name, "is in", layer.directory, "directory")
+      }
+
       let layerGroupContainer = document.createElement("div");
       let title = document.createElement("h4");
       title.style.margin = "5px 0";

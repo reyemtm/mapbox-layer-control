@@ -10,6 +10,12 @@ To Do:
 * [ ] ADD CSS FRAMEWORK STYLING
 * [ ] ADD COLLAPSIBLE GROUP HEADINGS
 
+![example/simple.html](grouped.jpg)
+
+
+![example/grouped.html](simple.jpg)
+
+
 ```javascript
 map.addControl( new layerControlSimple({
   layers: ["Lakes", "States", "Counties"]

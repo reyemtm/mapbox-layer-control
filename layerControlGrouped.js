@@ -40,7 +40,7 @@ class layerControlGrouped {
       let layerGroupContainer = document.createElement("div");
       let title = document.createElement("h4");
       title.style.margin = "5px 0";
-      title.innerText = layer.name;
+      title.innerHTML = layer.name;
       title.dataset.layergroup = layer.name;
       title.style.cursor = "pointer";
       layerGroupContainer.appendChild(title);

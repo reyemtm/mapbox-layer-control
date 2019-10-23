@@ -10,9 +10,6 @@ To Do:
 * [ ] ADD CSS FRAMEWORK STYLING
 * [ ] ADD COLLAPSIBLE GROUP HEADINGS
 
-<iframe src="grouped.html"></iframe>
-
-
 ```javascript
 map.addControl( new layerControlSimple({
   layers: ["Lakes", "States", "Counties"]

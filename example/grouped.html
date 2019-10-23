@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Display a map</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src="mapbox-gl.js"></script>
+  <link rel="stylesheet" href="mapbox-gl.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+    /*https://codepen.io/takeradi/pen/rjJpKK*/
+
+    .checkbox input[type="checkbox"] {
+      opacity: 0;
+      width: 0;
+    }
+
+    .checkbox label {
+      position: relative;
+      display: inline-block;
+
+      /*16px width of fake checkbox + 6px distance between fake checkbox and text*/
+      padding-left: 22px;
+    }
+
+    .checkbox label::before,
+    .checkbox label::after {
+      position: absolute;
+      content: "";
+
+      /*Needed for the line-height to take effect*/
+      display: inline-block;
+    }
+
+    /*Outer box of the fake checkbox*/
+    .checkbox label::before {
+      height: 14px;
+      width: 14px;
+      border: 1px solid;
+      border-radius: 2px;
+      left: 0px;
+      top: 3px;
+    }
+
+    /*Checkmark of the fake checkbox*/
+    .checkbox label::after {
+      height: 4px;
+      width: 9px;
+      border-left: 2px solid;
+      border-bottom: 2px solid;
+
+      transform: rotate(-45deg);
+
+      left: 3px;
+      top: 7px;
+    }
+
+    /*Hide the checkmark by default*/
+    .checkbox input[type="checkbox"]+label::after {
+      content: none;
+    }
+
+    /*Unhide on the checked state*/
+    .checkbox input[type="checkbox"]:checked+label::after {
+      content: "";
+    }
+
+    /*Adding focus styles on the outer-box of the fake checkbox*/
+    .checkbox input[type="checkbox"]:focus+label::before {
+      outline: rgb(59, 153, 252) auto 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id='map'></div>
+  <script type="module">
+    import { layerControlSimple } from "../layerControlSimple.js"
+import { layerControlGrouped } from "../layerControlGrouped.js"
+
+
+/*Blank Mapbox GL Map*/
+
+var map = new mapboxgl.Map({
+  container: 'map',
+  hash: true,
+  /*style: 'some mapbox style url*/
+  /*below is a blank style*/
+  style: {
+    "version": 8,
+    "name": "blank",
+    "sources": {
+      "blank": {
+        "type": "vector",
+        "url": ""
+      }
+    },
+    "layers": [{
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "skyblue"
+      }
+    }]
+  },
+  center: [-97.56, 39.59],
+  zoom: 4.68,
+  debug: 1
+});
+map.addControl(new mapboxgl.NavigationControl());
+map.addControl(new mapboxgl.FullscreenControl());
+
+map.on('style.load', function() {
+  map.addSource('counties', {
+    'type': 'geojson',
+    /*many types of data can be added, such as geojson, vector tiles or raster data*/
+    'data': 'counties.min.geojson'
+  });
+
+  /*here we are adding a source, then a layer based on that that source*/
+
+  map.addLayer({
+    'id': 'Counties',
+    'type': 'fill',    /*define the type of layer fill, line, point, fill-extrusion, background, raster, circle*/
+    'source': 'counties',
+    'layout': {
+      'visibility': 'visible'
+    },
+    
+    /*there are many options for styling - this is a simple style*/
+
+    'paint': {
+      'fill-color': 'lightgray',
+      'fill-outline-color': 'white',
+      'fill-opacity': 0.9
+    }
+  });
+
+  map.addLayer({
+    'id': 'States',
+    'type': 'line',    /*define the type of layer fill, line, point, fill-extrusion, background, raster, circle*/
+    'source': {
+      type: "geojson",
+      data: "states.geojson"
+    },
+    'layout': {
+      'visibility': 'none'
+    },
+    
+    /*there are many options for styling - this is a simple style*/
+
+    'paint': {
+      'line-color': '#121212',
+    }
+  });
+
+  map.addLayer({
+    'id': 'Lakes',
+    'type': 'fill',    /*define the type of layer fill, line, point, fill-extrusion, background, raster, circle*/
+    'source': {
+      type: "geojson",
+      data: "lakes.json"
+    },
+    'layout': {
+      'visibility': 'none'
+    },
+    
+    /*there are many options for styling - this is a simple style*/
+
+    'paint': {
+      'fill-color': 'blue',
+      'fill-outline-color': 'white',
+      'fill-opacity': 0.9
+    }
+  });
+
+  // map.addControl( new layerControlSimple({
+  //   layers: ["Counties", "Counties1", "Counties2"]
+  // }), "top-left");
+
+  map.addControl( new layerControlGrouped({
+    layers: [
+      {
+        name: "Hydro",
+        layers: ["Lakes"]
+      },
+      {
+        name: "Admin",
+        layers: ["States", "Counties"]
+      }
+    ]
+  }), "top-left");
+
+});
+
+
+/*End Blank Map*/
+
+</script>
+
+</body>
+
+</html>

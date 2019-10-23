@@ -1,89 +1,105 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <meta charset='utf-8' />
-    <title>Display a map</title>
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
-    <style>
-        body { margin:0; padding:0; }
-        #map { position:absolute; top:0; bottom:0; width:100%; }
-    </style>
-</head>
-<body>
-
-<div id='map'></div>
-<script type="module">
-import { layerControl } from "../layerControl.js"
-
-/*Blank Mapbox GL Map*/
-
-var map = new mapboxgl.Map({
-  container: 'map',
-  hash: true,
-  /*style: 'some mapbox style url*/
-  /*below is a blank style*/
-  style: {
-    "version": 8,
-    "name": "blank",
-    "sources": {
-      "blank": {
-        "type": "vector",
-        "url": ""
-      }
-    },
-    "layers": [{
-      "id": "background",
-      "type": "background",
-      "paint": {
-        "background-color": "#1d1f20"
-      }
-    }]
-  },
-  center: [-82.01, 39.01],
-  zoom: 4,
-  debug: 1
-});
-map.addControl(new mapboxgl.NavigationControl());
-map.addControl(new mapboxgl.FullscreenControl());
-
-
-
-map.on('style.load', function() {
-  map.addSource('counties', {
-    'type': 'geojson',
-    /*many types of data can be added, such as geojson, vector tiles or raster data*/
-    'data': 'https://ovrdc.github.io/gis-tutorials/tutorial-data/counties.geojson'
-  });
-
-  /*here we are adding a source, then a layer based on that that source*/
-
-  map.addLayer({
-    'id': 'counties',
-    'type': 'fill',    /*define the type of layer fill, line, point, fill-extrusion, background, raster, circle*/
-    'source': 'counties',
-    'layout': {
-      'visibility': 'visible'
-    },
-    
-    /*there are many options for styling - this is a simple style*/
-
-    'paint': {
-      'fill-color': 'skyblue',
-      'fill-outline-color': 'white',
-      'fill-opacity': 0.9
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Mapbox Layer Control Examples</title>
+  <style>
+    body {
+      margin: 0;
+      font-size: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: white;
     }
-  });
 
-  map.addControl( new layerControl());
+    h1 {
+      font-size: 90%;
+    }
 
-});
+    .container {
+      display: -webkit-flex;
+      /* Safari */
+      -webkit-align-items: center;
+      /* Safari 7.0+ */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
+    p, pre {
+      width: calc(100% - 40px);
+      margin: 10px;
+      max-width: 1200px;
+    }
 
-/*End Blank Map*/
+    iframe {
+      width: 100%;
+      border: none;
+      height: 360px;
+    }
 
-</script>
+    a {
+      font-size: 30px;
+    }
+
+    pre {
+      background: whitesmoke;
+    }
+
+    code {
+      font-size: 16px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <a href="https://github.com/reyemtm/mapbox-layer-control">
+      <h1>Mapbox GL JS Layer Control</h1>
+    </a>
+    <p>
+      This is a simple layer control for Mapbox GL JS maps. This is meant to be a starting point for a more complicated control. The layers need to already exist in the map. Each layer
+      should only be added once to the control. The control does not control map layer indexing. The layers should be
+      added to the control in the opposite order that they have been added to the map, so that the first layer in the
+      control is the topmost layer in the map of the layers in the control. The control simply adjusts the visibility layout property of the layer. In the grouped control, the group name toggles all the layers in the group.
+    </p>
+    <p>
+      <a href="grouped.html">Grouped Control</a>
+    </p>
+    <p>
+      <iframe src="grouped.html"></iframe>
+    </p>
+    <p>
+      <a href="simple.html">Simple Control</a>
+    </p>
+    <p>
+      <iframe src="simple.html"></iframe>
+    </p>
+    <pre>
+        <code>
+    map.addControl( new layerControlSimple({
+      layers: ["Lakes", "States", "Counties"]
+    }), "top-left");
+
+    map.addControl( new layerControlGrouped({
+      layers: [
+        {
+          name: "Hydro",
+          layers: ["Lakes"]
+        },
+        {
+          name: "Admin",
+          layers: ["States", "Counties"]
+        }
+      ]
+    }), "top-left");
+        </code>
+      </pre>
+  </div>
 
 </body>
+
 </html>

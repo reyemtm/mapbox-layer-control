@@ -1,21 +1,34 @@
-function layerControl(options) { }
+class layerControl {
+  constructor(options) {
+  }
 
-layerControl.prototype.onAdd = function(map) {
-  this._map = map;
-  this._layers = this._map.getStyle().layer
-  
-  console.log(options)
-  
-  
-  this._container = document.createElement('div');
-  this._container.className = 'mapboxgl-ctrl';
-  this._container.textContent = 'Hello, world';
-  return this._container;
-};
+  onAdd(map) {
+    console.log(this)
+    this._map = map;
 
-layerControl.prototype.onRemove = function(map) {
-  this._container.parentNode.removeChild(this._container);
-  this._map = undefined;
-};
 
-export layerControl
+    this._container = document.createElement('div');
+    this._container.className = 'mapboxgl-ctrl';
+    this._container.innerHTML = '<div style="width:100%;background:#ff0000;">&nbsp;</div>';
+
+    this._mapLayers = this._map.getStyle().layers;
+    console.log(this._mapLayers)
+    this._layers = ["counties"];
+
+    this._layers.map(layer => {
+      console.log(layer)
+      console.log(layer.indexOf(this._mapLayers) )
+      if (layer.indexOf(this._mapLayers) > -1) {
+        this._container.innerHTML += `<div>${layer}</div>`
+      }
+    })
+
+    return this._container;
+  }
+  onRemove(map) {
+    this._container.parentNode.removeChild(this._container);
+    this._map = undefined;
+  }
+}
+
+export { layerControl }

@@ -49,6 +49,7 @@ class layerControlGrouped {
       directory.innerHTML = "&#45;&nbsp;&nbsp;" + layer.directory; //"&#43; "
       directory.className = "layerControlDirectory";
       directory.dataset.name = layer.directory;
+      directory.style.fontWeight = "bold";
 
 
       // let layerGroupContainer = document.createElement("div");

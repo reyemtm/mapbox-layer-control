@@ -1,11 +1,27 @@
+  /****
+  Make the default mapbox controls larger, smaller box shadow and less rounded.
+  ****/
+
+  .mapboxgl-ctrl-group>button {
+    width: 36px;
+    height: 36px;
+  }
+  .mapboxgl-ctrl-group:not(:empty) {
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+  }
+
+  /****
+  ****/
+
   .mgl-layerControl {
-    width: 30px;
-    height: 30px;
+    width: 36px;
+    height: 36px;
     color: transparent;
     background-color: white;
     overflow: hidden;
     background-image: url("https://icongr.am/material/layers.svg");
-    background-position: cover;
+    background-position: center;
   }
 
   .mgl-layerControl .layerControlDirectory {

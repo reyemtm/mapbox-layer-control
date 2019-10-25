@@ -69,7 +69,7 @@ class layerControlGrouped {
 
       for (let i = 0; i < layer.mapLayers.length; i++) {
         let groupedLayer = layer.mapLayers[i];
-        // console.log(groupedLayer)
+
         if (this._mapLayerIds.indexOf(groupedLayer.id) > -1) {
           let checked = getMapLayerVisibility(this._mapLayers, this._mapLayerIds, groupedLayer.id);
           let index = this._mapLayerIds.indexOf(groupedLayer.id);
@@ -87,7 +87,10 @@ class layerControlGrouped {
      * PUTTING THIS HERE SO AS NOT TO HAVE TO PASS IN THE MAP
      ****/
     function setLayerVisibility(checked, layer) {
+      console.log("layer", layer, "checked", checked)
       let visibility = (checked === true) ? 'visible' : 'none';
+      if ()
+      console.log("the", layer, "has visibility", visibility)
       _this._map.setLayoutProperty(layer, 'visibility', visibility);
     }
 
@@ -95,9 +98,17 @@ class layerControlGrouped {
      * ADD EVENT LISTENERS FOR THE LAYER CONTROL ALL ON THE CONTROL ITSELF
      ****/
     this._div.addEventListener("click", function (e) {
-      console.log("target", e.target.id)
+      // console.log("target", e.target.id)
       if (e.target.id && e.target.dataset.mapLayer) {
-        setLayerVisibility(e.target.checked, e.target.id)
+        let group = e.target.dataset.group;
+        console.log("group", group)
+        let groupMembers = document.querySelectorAll("[data-group]");
+        for (let i = 0; i < groupMembers.length; i++) {
+          if (group != "false" && groupMembers[i].dataset.group === group) {
+            // console.log(groupMembers[i].id, groupMembers[i].dataset.group)
+            setLayerVisibility(groupMembers[i].checked, groupMembers[i].id);
+          }
+        }
         return
       }
       if (e.target.dataset.layergroup) {
@@ -176,6 +187,7 @@ function createLayerInputToggle(layer, checked, index) {
   input.name = layer.name;
   input.type = "checkbox"
   input.id = layer.id;
+  input.dataset.group = (layer.group) ? layer.group : false;
   input.className = "layer";
   input.style.cursor = "pointer";
   input.dataset.mapLayer = true;

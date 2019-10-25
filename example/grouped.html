@@ -127,6 +127,24 @@ map.on('style.load', function() {
   });
 
   map.addLayer({
+    'id': 'riversCase',
+    'type': 'line',    
+    'source': {
+      type: "geojson",
+      data: "rivers.geojson"
+    },
+    'layout': {
+      'visibility': 'none'
+    },
+    
+
+    'paint': {
+      'line-color': 'white',
+      'line-width': 6
+    }
+  });
+
+  map.addLayer({
     'id': 'rivers',
     'type': 'line',    
     'source': {
@@ -186,9 +204,17 @@ map.on('style.load', function() {
           {
             "name": "Rivers",
             "id": "rivers",
+            "group": "rivers",
             "legend": `
             <i class='fa fa-minus' style='color:blue;'>&nbsp;</i>Rivers<br>
-            `,          }
+            `         
+          },
+          {
+            "name": "",
+            "id": "riversCase",
+            "hidden": true,
+            "group": "rivers"
+          },
         ]
       },
       {

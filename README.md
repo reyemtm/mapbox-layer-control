@@ -88,3 +88,4 @@ map.addControl( new layerControlGrouped({
   ]
 }), "top-left");
 ```
+Data is from [Natural Earth](https://www.naturalearthdata.com/) and [here](https://eric.clst.org/tech/usgeojson/).

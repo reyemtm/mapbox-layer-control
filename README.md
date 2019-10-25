@@ -1,6 +1,6 @@
 # mapbox-layer-control
 
-#### [Grouped Demo](https://reyemtm.github.io/mapbox-layer-control/example/grouped.html)
+#### [Grouped Demo](https://reyemtm.github.io/mapbox-layer-control/example/grouped.html) experimental
 
 #### [Simple Demo](https://reyemtm.github.io/mapbox-layer-control/example/simple.html)
 

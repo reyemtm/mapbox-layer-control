@@ -7,7 +7,8 @@
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
   <script src="mapbox-gl.js"></script>
   <link rel="stylesheet" href="mapbox-gl.css" />
-  <style>
+  <link rel="stylesheet" href="../layerControl.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous" />  <style>
     body {
       margin: 0;
       padding: 0;
@@ -18,67 +19,6 @@
       top: 0;
       bottom: 0;
       width: 100%;
-    }
-    /*https://codepen.io/takeradi/pen/rjJpKK*/
-
-    .checkbox input[type="checkbox"] {
-      opacity: 0;
-      width: 0;
-    }
-
-    .checkbox label {
-      position: relative;
-      display: inline-block;
-
-      /*16px width of fake checkbox + 6px distance between fake checkbox and text*/
-      padding-left: 22px;
-    }
-
-    .checkbox label::before,
-    .checkbox label::after {
-      position: absolute;
-      content: "";
-
-      /*Needed for the line-height to take effect*/
-      display: inline-block;
-    }
-
-    /*Outer box of the fake checkbox*/
-    .checkbox label::before {
-      height: 14px;
-      width: 14px;
-      border: 1px solid;
-      border-radius: 2px;
-      left: 0px;
-      top: 3px;
-    }
-
-    /*Checkmark of the fake checkbox*/
-    .checkbox label::after {
-      height: 4px;
-      width: 9px;
-      border-left: 2px solid;
-      border-bottom: 2px solid;
-
-      transform: rotate(-45deg);
-
-      left: 3px;
-      top: 7px;
-    }
-
-    /*Hide the checkmark by default*/
-    .checkbox input[type="checkbox"]+label::after {
-      content: none;
-    }
-
-    /*Unhide on the checked state*/
-    .checkbox input[type="checkbox"]:checked+label::after {
-      content: "";
-    }
-
-    /*Adding focus styles on the outer-box of the fake checkbox*/
-    .checkbox input[type="checkbox"]:focus+label::before {
-      outline: rgb(59, 153, 252) auto 5px;
     }
   </style>
 </head>
@@ -125,21 +65,18 @@ map.addControl(new mapboxgl.FullscreenControl());
 map.on('style.load', function() {
   map.addSource('counties', {
     'type': 'geojson',
-    /*many types of data can be added, such as geojson, vector tiles or raster data*/
     'data': 'counties.min.geojson'
   });
 
-  /*here we are adding a source, then a layer based on that that source*/
 
   map.addLayer({
     'id': 'Counties',
-    'type': 'fill',    /*define the type of layer fill, line, point, fill-extrusion, background, raster, circle*/
+    'type': 'fill',    
     'source': 'counties',
     'layout': {
       'visibility': 'visible'
     },
     
-    /*there are many options for styling - this is a simple style*/
 
     'paint': {
       'fill-color': 'lightgray',
@@ -150,7 +87,7 @@ map.on('style.load', function() {
 
   map.addLayer({
     'id': 'States',
-    'type': 'line',    /*define the type of layer fill, line, point, fill-extrusion, background, raster, circle*/
+    'type': 'line',    
     'source': {
       type: "geojson",
       data: "states.geojson"
@@ -159,7 +96,6 @@ map.on('style.load', function() {
       'visibility': 'none'
     },
     
-    /*there are many options for styling - this is a simple style*/
 
     'paint': {
       'line-color': '#121212',
@@ -168,7 +104,7 @@ map.on('style.load', function() {
 
   map.addLayer({
     'id': 'Lakes',
-    'type': 'fill',    /*define the type of layer fill, line, point, fill-extrusion, background, raster, circle*/
+    'type': 'fill',    
     'source': {
       type: "geojson",
       data: "lakes.json"
@@ -177,12 +113,47 @@ map.on('style.load', function() {
       'visibility': 'none'
     },
     
-    /*there are many options for styling - this is a simple style*/
 
     'paint': {
       'fill-color': 'blue',
       'fill-outline-color': 'white',
       'fill-opacity': 0.9
+    }
+  });
+
+  map.addLayer({
+    'id': 'rivers',
+    'type': 'line',    
+    'source': {
+      type: "geojson",
+      data: "rivers.geojson"
+    },
+    'layout': {
+      'visibility': 'none'
+    },
+    
+
+    'paint': {
+      'line-color': 'blue',
+      'line-width': 3
+    }
+  });
+
+  map.addLayer({
+    'id': 'Rail',
+    'type': 'line',    
+    'source': {
+      type: "geojson",
+      data: "rail.geojson"
+    },
+    'layout': {
+      'visibility': 'none'
+    },
+    
+
+    'paint': {
+      'line-color': 'black',
+      'line-width': 4
     }
   });
 
@@ -194,12 +165,50 @@ map.on('style.load', function() {
     layers: [
       {
         name: "Hydro",
-        layers: ["Lakes"],
-        directory: "Environment"
+        directory: "Environment",
+        "legend": `
+            <i class='fa fa-square' style='color:blue;'>&nbsp;</i>Lakes<br>
+            <i class='fa fa-minus' style='color:blue;'>&nbsp;</i>Rivers
+            `,
+        mapLayers: [
+          {
+          "name": "Lakes",
+          "id": "Lakes",
+          "legend": `
+            <i class='fa fa-square' style='color:blue;'>&nbsp;</i>Lakes<br>
+            `,
+          },
+          {
+            "name": "Rivers",
+            "id": "rivers",
+            "legend": `
+            <i class='fa fa-minus' style='color:blue;'>&nbsp;</i>Rivers<br>
+            `,          }
+        ]
       },
       {
+        name: "Transportation",
+        directory: "Cultural",
+        mapLayers: [
+          {
+          "name": "Rail",
+          "id": "Rail",
+          "legend": "<i class='fa fa-minus' style='color:black;'>&nbsp;</i>Railroads"
+          }
+        ]
+      },
+      {          
         name: "Admin",
-        layers: ["States", "Counties"]
+        directory: "Administrative",
+        mapLayers: [{
+          "name": "States",
+          "id": "States",
+         },
+         {
+           "name": "Counties",
+           "id": "Counties"
+          }
+        ]
       }
     ]
   }), "top-left");

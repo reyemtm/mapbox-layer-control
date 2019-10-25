@@ -1,11 +1,3 @@
-/****
- * [ ] ADD HIDDEN LAYERS
- * [ ] ADD LEGEND ITEMS
- * [ ] ADD DOCUMENTATION
- * [ ] ADD CSS FRAMEWORK STYLING
- * [ ] ADD COLLAPSIBLE GROUP HEADINGS
- */
-
 class layerControlGrouped {
 
   constructor(options) {
@@ -23,9 +15,10 @@ class layerControlGrouped {
     this._div = document.createElement('div');
     this._div["aria-label"] = "Layer Control";
     this._div.title = "Layer Control";
-    this._div.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
-    this._div.style.padding = "8px";
+    this._div.className = 'mapboxgl-ctrl mapboxgl-ctrl-group mgl-layerControl';
+    // this._div.style.padding = "8px";
     this._div.style.fontSize = "14px"
+    this._div.style.overflowX = "hidden";
 
     // GET THE MAP LAYERS AND LAYER IDS
     this._mapLayers = this._map.getStyle().layers;
@@ -42,26 +35,50 @@ class layerControlGrouped {
         console.log(layer.name, "is in", layer.directory, "directory")
       }
 
-      let layerGroupContainer = document.createElement("div");
-      let title = document.createElement("h4");
-      title.style.margin = "5px 0";
-      title.innerHTML = layer.name;
+      let accordian = document.createElement("div");
+      
+      accordian.dataset.accordian = true;
+
+      let directory = document.createElement("div");
+
+      directory.style.fontSize = "18px";
+      directory.style.background = "whitesmoke";
+      directory.style.padding = "8px";
+      directory.style.cursor = "pointer";
+      directory.id = (!layer.directory) ? Math.floor(Math.random() *10000) : (layer.directory).replace(" ", "");
+      directory.innerHTML = "&#45;&nbsp;&nbsp;" + layer.directory; //"&#43; "
+      directory.className = "layerControlDirectory";
+      directory.dataset.name = layer.directory;
+
+
+      // let layerGroupContainer = document.createElement("div");
+      let title = document.createElement("div");
+      title.style.margin = "4px";
+      title.style.fontWeight = "bold";
+      // title.innerHTML = (layer.legend) ? layer.name + "<br>" + layer.legend : layer.name;
+      title.innerText = layer.name
       title.dataset.layergroup = layer.name;
       title.style.cursor = "pointer";
-      layerGroupContainer.appendChild(title);
+      title.style.display = "block";
 
-      for (let i = 0; i < layer.layers.length; i++) {
-        let groupedLayer = layer.layers[i];
-        if (this._mapLayerIds.indexOf(groupedLayer) > -1) {
-          let checked = getMapLayerVisibility(this._mapLayers, this._mapLayerIds, groupedLayer);
-          let index = this._mapLayerIds.indexOf(groupedLayer);
+      accordian.append(directory);
+      accordian.appendChild(title)
+
+      // layerGroupContainer.appendChild(accordian);
+
+      for (let i = 0; i < layer.mapLayers.length; i++) {
+        let groupedLayer = layer.mapLayers[i];
+        // console.log(groupedLayer)
+        if (this._mapLayerIds.indexOf(groupedLayer.id) > -1) {
+          let checked = getMapLayerVisibility(this._mapLayers, this._mapLayerIds, groupedLayer.id);
+          let index = this._mapLayerIds.indexOf(groupedLayer.id);
 
           let input = createLayerInputToggle(groupedLayer, checked, index);
-          layerGroupContainer.appendChild(input);
+          accordian.appendChild(input);
         }
       }
 
-      this._div.appendChild(layerGroupContainer)
+      this._div.appendChild(accordian)
 
     }
 
@@ -77,9 +94,9 @@ class layerControlGrouped {
      * ADD EVENT LISTENERS FOR THE LAYER CONTROL ALL ON THE CONTROL ITSELF
      ****/
     this._div.addEventListener("click", function (e) {
-      console.log("target", e.target)
-      if (e.target.id && e.target.name) {
-        setLayerVisibility(e.target.checked, e.target.name)
+      console.log("target", e.target.id)
+      if (e.target.id && e.target.dataset.mapLayer) {
+        setLayerVisibility(e.target.checked, e.target.id)
         return
       }
       if (e.target.dataset.layergroup) {
@@ -104,6 +121,17 @@ class layerControlGrouped {
             }
           }
         }
+      }
+
+      if (e.target.className === "layerControlDirectory") {
+        //change the plus minus with css???
+        // console.log(e.target.parentElement.children[1].style.display)
+        if (e.target.parentElement.children[1].style.display === "block") {
+          e.target.innerHTML = "&#43; " + e.target.dataset.name;
+        }else{
+          e.target.innerHTML = "&#45;&nbsp;&nbsp;" + e.target.dataset.name;
+        }
+        toggleChildren(e.target.parentElement)
       }
     })
 
@@ -137,22 +165,35 @@ function getMapLayerVisibility(layers, ids, layer) {
 
 function createLayerInputToggle(layer, checked, index) {
   let div = document.createElement("div");
-  div.className = "checkbox"
+  div.className = "checkbox";
+
+  if (layer.hidden) {
+    div.style.display = "none"
+  }
+
   let input = document.createElement("input");
-  input.name = layer;
+  input.name = layer.name;
   input.type = "checkbox"
-  input.id = "layer_" + index;
+  input.id = layer.id;
   input.className = "layer";
   input.style.cursor = "pointer";
-  if (checked) input.checked = true
+  input.dataset.mapLayer = true;
+  if (checked) input.checked = true;
   let label = document.createElement("label");
-  label.innerText = layer;
-  label.setAttribute("for", "layer_" + index);
-  label.innerText = layer;
+  label.setAttribute("for", layer.id);
   label.style.cursor = "pointer";
   label.style.lineHeight = "24px" //need to make this relative to something
+  if (layer.legend) {
+    label.innerText = layer.name;
+    let legend = document.createElement("div");
+    legend.innerHTML = layer.legend;
+    label.appendChild(legend)
+  }else{
+    label.innerText = layer.name;
+  }
   div.appendChild(input);
   div.appendChild(label);
+  
   return div
 }
 
@@ -169,4 +210,17 @@ function getAllChecked(boxes) {
   }
   // console.log(boolean)
   return boolean
+}
+
+function toggleChildren(div) {
+  var children = div.children;
+  if (children.length > 1 && children[1].style.display === "none") {
+    for (var i = 1; i < children.length; i++) {
+      children[i].style.display = "block"
+    }
+  }else{
+    for (var i = 1; i < children.length; i++) {
+      children[i].style.display = "none"
+    }
+  }
 }

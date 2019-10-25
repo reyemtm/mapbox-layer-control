@@ -14,7 +14,13 @@
   /****
   ****/
 
-  .mgl-layerControl {
+  /****
+  NEED TO CHANGE TO JS MOUSEENTER, MOUSELEAVE, CLICK FOR TOUCH/MOBILE OR JUST ADD A TITLE TO THE CONTROL
+  THE PROBLEM IS WHEN THE MINIMIZED CONTROL IS CLICKED ON MOBILE IT TRIGGERS A CLICK ON THE FIRST LAYER DIRECTORY
+  I COULD JUST ADD SOMETHING TO COVER THAT WITH Z-INDEX AND HIDE THIS ON HOVER...
+  ****/
+
+  /*.mgl-layerControl {
     width: 36px;
     height: 36px;
     color: transparent;
@@ -26,7 +32,7 @@
 
   .mgl-layerControl .layerControlDirectory {
     display: none;
-  }
+  }*/
 
   .mgl-layerControl::before {
     height: 14px;
@@ -35,6 +41,10 @@
     border-radius: 2px;
     left: 0px;
     top: 3px;
+  }
+
+  .mgl-layerControl:hover .mgl-layerControlCover {
+    display: none;
   }
 
   .mgl-layerControl:hover, 

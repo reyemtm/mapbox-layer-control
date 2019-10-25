@@ -187,6 +187,17 @@ map.on('style.load', function() {
   map.addControl( new layerControlGrouped({
     layers: [
       {
+        name: "Transportation",
+        directory: "Cultural",
+        mapLayers: [
+          {
+          "name": "Rail",
+          "id": "Rail",
+          "legend": "<i class='fa fa-minus' style='color:black;'>&nbsp;</i>Railroads"
+          }
+        ]
+      },
+      {
         name: "Hydro",
         directory: "Environment",
         "legend": `
@@ -215,17 +226,6 @@ map.on('style.load', function() {
             "hidden": true,
             "group": "rivers"
           },
-        ]
-      },
-      {
-        name: "Transportation",
-        directory: "Cultural",
-        mapLayers: [
-          {
-          "name": "Rail",
-          "id": "Rail",
-          "legend": "<i class='fa fa-minus' style='color:black;'>&nbsp;</i>Railroads"
-          }
         ]
       },
       {          

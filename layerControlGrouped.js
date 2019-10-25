@@ -16,15 +16,22 @@ class layerControlGrouped {
     this._div["aria-label"] = "Layer Control";
     this._div.title = "Layer Control";
     this._div.className = 'mapboxgl-ctrl mapboxgl-ctrl-group mgl-layerControl';
-    // this._div.style.padding = "8px";
     this._div.style.fontSize = "14px"
     this._div.style.overflowX = "hidden";
+    this._cover = document.createElement("div");
+    this._cover.style.width = "36px";
+    this._cover.style.height = "36px";
+    this._cover.style.zIndex = 1;
+    this._cover.style.position = "absolute";
+    this._cover.classList = "mgl-layerControlCover";
+    this._div.appendChild(this._cover);
+
 
     // GET THE MAP LAYERS AND LAYER IDS
     this._mapLayers = this._map.getStyle().layers;
     this._mapLayerIds = getMapLayerIds(this._mapLayers);
 
-    console.log(this._layers)
+    // console.log(this._layers)
 
     // CREATE THE INPUTS FOR THE CONTROL
     for (let i = 0; i < this._layers.length; i++) {
@@ -32,7 +39,7 @@ class layerControlGrouped {
 
       if (layer.directory) {
         //create a collapsible directory to hold the groups this directory will not have the ability toggle the layers
-        console.log(layer.name, "is in", layer.directory, "directory")
+        // console.log(layer.name, "is in", layer.directory, "directory")
       }
 
       let accordian = document.createElement("div");
@@ -87,30 +94,42 @@ class layerControlGrouped {
      * PUTTING THIS HERE SO AS NOT TO HAVE TO PASS IN THE MAP
      ****/
     function setLayerVisibility(checked, layer) {
-      console.log("layer", layer, "checked", checked)
+      // console.log("layer", layer, "checked", checked)
       let visibility = (checked === true) ? 'visible' : 'none';
       
-      console.log("the", layer, "has visibility", visibility)
+      // console.log("the", layer, "has visibility", visibility)
       _this._map.setLayoutProperty(layer, 'visibility', visibility);
     }
 
     /****
      * ADD EVENT LISTENERS FOR THE LAYER CONTROL ALL ON THE CONTROL ITSELF
      ****/
+    this._div.addEventListener("mouseenter", function (e) {
+      // console.log(e.target)
+    });
+
     this._div.addEventListener("click", function (e) {
-      // console.log("target", e.target.id)
-      if (e.target.id && e.target.dataset.mapLayer) {
+      // console.log(e.target)
+      if (e.target.className === "mgl-layerControlCover") {
+        return
+      }
+
+      if (e.target.dataset.mapLayer && e.target.dataset.group === "false") {
+        setLayerVisibility(e.target.checked, e.target.id);
+        return
+      }
+
+      if (e.target.dataset.mapLayer) {
         let group = e.target.dataset.group;
-        console.log("group", group)
         let groupMembers = document.querySelectorAll("[data-group]");
         for (let i = 0; i < groupMembers.length; i++) {
           if (group != "false" && groupMembers[i].dataset.group === group) {
-            // console.log(groupMembers[i].id, groupMembers[i].dataset.group)
-            setLayerVisibility(groupMembers[i].checked, groupMembers[i].id);
+            setLayerVisibility(e.target.checked, groupMembers[i].id);
           }
         }
         return
       }
+
       if (e.target.dataset.layergroup) {
         let inputs = e.target.parentElement.getElementsByClassName("layer");
 
@@ -136,8 +155,6 @@ class layerControlGrouped {
       }
 
       if (e.target.className === "layerControlDirectory") {
-        //change the plus minus with css???
-        // console.log(e.target.parentElement.children[1].style.display)
         if (e.target.parentElement.children[1].style.display === "block") {
           e.target.innerHTML = "&#43; " + e.target.dataset.name;
         }else{
@@ -180,7 +197,8 @@ function createLayerInputToggle(layer, checked, index) {
   div.className = "checkbox";
 
   if (layer.hidden) {
-    div.style.display = "none"
+    div.style.display = "none";
+    div.dataset.hidden = true
   }
 
   let input = document.createElement("input");
@@ -221,7 +239,6 @@ function getAllChecked(boxes) {
       break
     }
   }
-  // console.log(boolean)
   return boolean
 }
 
@@ -229,7 +246,7 @@ function toggleChildren(div) {
   var children = div.children;
   if (children.length > 1 && children[1].style.display === "none") {
     for (var i = 1; i < children.length; i++) {
-      children[i].style.display = "block"
+      if (!children[i].dataset.hidden) children[i].style.display = "block"
     }
   }else{
     for (var i = 1; i < children.length; i++) {

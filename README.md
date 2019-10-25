@@ -40,11 +40,50 @@ map.addControl( new layerControlGrouped({
   layers: [
     {
       name: "Hydro",
-      layers: ["Lakes"]
+      directory: "Environment",
+      "legend": `
+          <i class='fa fa-square' style='color:blue;'>&nbsp;</i>Lakes<br>
+          <i class='fa fa-minus' style='color:blue;'>&nbsp;</i>Rivers
+          `,
+      mapLayers: [
+        {
+        "name": "Lakes",
+        "id": "Lakes",
+        "legend": `
+          <i class='fa fa-square' style='color:blue;'>&nbsp;</i>Lakes<br>
+          `,
+        },
+        {
+          "name": "Rivers",
+          "id": "rivers",
+          "legend": `
+          <i class='fa fa-minus' style='color:blue;'>&nbsp;</i>Rivers<br>
+          `,          }
+      ]
     },
     {
+      name: "Transportation",
+      directory: "Cultural",
+      mapLayers: [
+        {
+        "name": "Rail",
+        "id": "Rail",
+        "legend": "<i class='fa fa-minus' style='color:black;'>&nbsp;</i>Railroads"
+        }
+      ]
+    },
+    {          
       name: "Admin",
-      layers: ["States", "Counties"]
+      directory: "Administrative",
+      mapLayers: [{
+        "name": "States",
+        "id": "States",
+        },
+        {
+          "name": "Counties",
+          "id": "Counties"
+        }
+      ]
     }
   ]
 }), "top-left");

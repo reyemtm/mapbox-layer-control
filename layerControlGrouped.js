@@ -89,7 +89,7 @@ class layerControlGrouped {
     function setLayerVisibility(checked, layer) {
       console.log("layer", layer, "checked", checked)
       let visibility = (checked === true) ? 'visible' : 'none';
-      if ()
+      
       console.log("the", layer, "has visibility", visibility)
       _this._map.setLayoutProperty(layer, 'visibility', visibility);
     }

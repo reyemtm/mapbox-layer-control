@@ -1,17 +1,81 @@
 class layerControlGrouped {
 
-  constructor(options) {
-    options = (!options) ? {
-      layerGroups: []
-    } : options;
-    this._layers = options.layers
+  constructor(config) {
+    config = (!config) ? [] : config;
+
+    config = config.reverse();
+
+    this._config = config.slice()
+
+    let directories = []; 
+    let groups = [];
+
+    directories = this._config.reduce(function(i, layer) {
+      return [...i, layer.directory]
+    }, []);
+
+    this._directories = [...new Set(directories)];
+
+    groups = this._config.reduce(function(i, layer) {
+      if (!layer.group) layer.group = "Operational Layers"
+      return [...i, layer.group]
+    }, []);
+
+    this._groups = [...new Set(groups)];
+
+    let temp = {};
+
+    this._directories.map(function(d) {
+      config.map(function(layer) {
+        if (layer.directory === d) {
+          temp[layer.directory] = {
+          }
+        }
+      })
+    })
+
+    this._config.map(function(l) {
+      if (!l.group) l.group = "Operational Layers";
+      temp[l.directory][l.group] = []
+    })
+
+    this._config.map(function(l) {
+      temp[l.directory][l.group].push(l)
+    })
+
+    this._layerControlConfig = temp
+
+    console.log(temp)
+
+    // this._layerControlConfig = {
+    //     directory1: {
+    //       groupName: [
+    //         {
+    //           id: "id",
+    //           name: "name",
+    //           legend: "html"
+    //         }
+    //       ]
+    //     },
+    //     directory2: {
+    //       groupName: [
+    //         {
+    //           id: "id",
+    //           name: "name",
+    //           legend: "html"
+    //         }
+    //       ]
+    //     }
+    //   }
   }
 
   onAdd(map) {
+    
+
     this._map = map;
     let _this = this; //might use this later
 
-    // SETUP MAIN MAPBOX CONTROL
+    // SETUP MAIN MAPBOX CONTROL = MOVE TO OTHER FUNCTION controlCreate()
     this._div = document.createElement('div');
     this._div["aria-label"] = "Layer Control";
     this._div.title = "Layer Control";
@@ -26,68 +90,42 @@ class layerControlGrouped {
     this._cover.classList = "mgl-layerControlCover";
     this._div.appendChild(this._cover);
 
-
     // GET THE MAP LAYERS AND LAYER IDS
     this._mapLayers = this._map.getStyle().layers;
     this._mapLayerIds = getMapLayerIds(this._mapLayers);
+  
 
-    // console.log(this._layers)
+    //BUILD DIRECTORIES, GROUPS AND LAYER TOGGLES
+    for (let d in this._layerControlConfig) {
 
-    // CREATE THE INPUTS FOR THE CONTROL
-    for (let i = 0; i < this._layers.length; i++) {
-      let layer = this._layers[i];
+      //CREATE DIRECTORY
+      let directory = d;
+      let directoryDiv = lcCreateDicrectory(directory);
 
-      if (layer.directory) {
-        //create a collapsible directory to hold the groups this directory will not have the ability toggle the layers
-        // console.log(layer.name, "is in", layer.directory, "directory")
-      }
+      //CREATE TOGGLE GROUPS
+      for (let g in this._layerControlConfig[d]) {
 
-      let accordian = document.createElement("div");
-      
-      accordian.dataset.accordian = true;
+        let groupDiv = lcCreateGroup(g, this._layerControlConfig[d][g], map)
 
-      let directory = document.createElement("div");
-
-      directory.style.fontSize = "18px";
-      directory.style.background = "whitesmoke";
-      directory.style.padding = "8px";
-      directory.style.cursor = "pointer";
-      directory.id = (!layer.directory) ? Math.floor(Math.random() *10000) : (layer.directory).replace(" ", "");
-      directory.innerHTML = "&#45;&nbsp;&nbsp;" + layer.directory; //"&#43; "
-      directory.className = "layerControlDirectory";
-      directory.dataset.name = layer.directory;
-      directory.style.fontWeight = "bold";
+      // CREATE INDIVIDUAL LAYER TOGGLES
+      for (let l = 0; l < this._config.length; l++) {
+        let layer = this._config[l];
+        if (layer.directory === directory && layer.group === g) {
+          // if (layer.group && group) {
+          //   let titleInputContainer = document.createElement("div");
+          // }
 
 
-      // let layerGroupContainer = document.createElement("div");
-      let title = document.createElement("div");
-      title.style.margin = "4px";
-      title.style.fontWeight = "bold";
-      // title.innerHTML = (layer.legend) ? layer.name + "<br>" + layer.legend : layer.name;
-      title.innerText = layer.name
-      title.dataset.layergroup = layer.name;
-      title.style.cursor = "pointer";
-      title.style.display = "block";
-
-      accordian.append(directory);
-      accordian.appendChild(title)
-
-      // layerGroupContainer.appendChild(accordian);
-
-      for (let i = 0; i < layer.mapLayers.length; i++) {
-        let groupedLayer = layer.mapLayers[i];
-
-        if (this._mapLayerIds.indexOf(groupedLayer.id) > -1) {
-          let checked = getMapLayerVisibility(this._mapLayers, this._mapLayerIds, groupedLayer.id);
-          let index = this._mapLayerIds.indexOf(groupedLayer.id);
-
-          let input = createLayerInputToggle(groupedLayer, checked, index);
-          accordian.appendChild(input);
+          let checked = getMapLayerVisibility(this._mapLayers, this._mapLayerIds, layer.id);
+          let layerSelector = createLayerInputToggle(layer, checked);
+          groupDiv.appendChild(layerSelector)
         }
       }
 
-      this._div.appendChild(accordian)
+        directoryDiv.appendChild(groupDiv);
+      }
 
+      this._div.appendChild(directoryDiv)
     }
 
     /****
@@ -98,32 +136,42 @@ class layerControlGrouped {
       let visibility = (checked === true) ? 'visible' : 'none';
       
       // console.log("the", layer, "has visibility", visibility)
-      _this._map.setLayoutProperty(layer, 'visibility', visibility);
+      map.setLayoutProperty(layer, 'visibility', visibility);
     }
 
     /****
      * ADD EVENT LISTENERS FOR THE LAYER CONTROL ALL ON THE CONTROL ITSELF
      ****/
-    this._div.addEventListener("mouseenter", function (e) {
-      // console.log(e.target)
-    });
+    // this._div.addEventListener("mouseenter", function (e) {
+    //   // console.log(e.target)
+    // });
 
     this._div.addEventListener("click", function (e) {
-      // console.log(e.target)
+      console.log(e.target);
+
       if (e.target.className === "mgl-layerControlCover") {
         return
       }
 
+      if (e.target.className === "checkbox") {
+        e.target.children[0].click();
+        return
+      }
+
       if (e.target.dataset.mapLayer && e.target.dataset.group === "false") {
+        console.log(1)
         setLayerVisibility(e.target.checked, e.target.id);
         return
       }
 
       if (e.target.dataset.mapLayer) {
+        console.log(2)
+
         let group = e.target.dataset.group;
         let groupMembers = document.querySelectorAll("[data-group]");
         for (let i = 0; i < groupMembers.length; i++) {
           if (group != "false" && groupMembers[i].dataset.group === group) {
+            console.log(group)
             setLayerVisibility(e.target.checked, groupMembers[i].id);
           }
         }
@@ -131,18 +179,17 @@ class layerControlGrouped {
       }
 
       if (e.target.dataset.layergroup) {
+        console.log("layergroup")
         let inputs = e.target.parentElement.getElementsByClassName("layer");
-
+        console.log("inputs", inputs)
         // CHECK IF ANY OF THE BOXES ARE NOT CHECKED AND IF NOT THEM CHECK THEM ALL
         if (!getAllChecked(inputs)) {
           for (let i = 0; i < inputs.length; i++) {
-            let checkbox = inputs[i];
-            if (!checkbox.checked) {
-              checkbox.click()
+            if (!inputs[i].checked) {
+              inputs[i].click()
             }
           }
         } 
-        
         // IF ALL OF THE BOXES ARE CHECKED, UNCHECK THEM ALL
         else {
           for (let i = 0; i < inputs.length; i++) {
@@ -152,15 +199,18 @@ class layerControlGrouped {
             }
           }
         }
+        return
       }
 
-      if (e.target.className === "layerControlDirectory") {
-        if (e.target.parentElement.children[1].style.display === "block") {
-          e.target.innerHTML = "&#43; " + e.target.dataset.name;
+      if (e.target.dataset.directoryToggle) {
+        if (e.target.parentElement.children[2].style.display != "none") {
+          e.target.parentElement.children[0].style.backgroundImage = "url('/plus.svg')";
         }else{
-          e.target.innerHTML = "&#45;&nbsp;&nbsp;" + e.target.dataset.name;
+          e.target.parentElement.children[0].style.backgroundImage = "url('/minus.svg')";
         }
         toggleChildren(e.target.parentElement)
+        
+        return
       }
     })
 
@@ -195,6 +245,7 @@ function getMapLayerVisibility(layers, ids, layer) {
 function createLayerInputToggle(layer, checked, index) {
   let div = document.createElement("div");
   div.className = "checkbox";
+  div.style.cursor = "pointer";
 
   if (layer.hidden) {
     div.style.display = "none";
@@ -202,25 +253,25 @@ function createLayerInputToggle(layer, checked, index) {
   }
 
   let input = document.createElement("input");
-  input.name = layer.name;
+  input.name = (!layer.name) ? layer.id : layer.name;
   input.type = "checkbox"
   input.id = layer.id;
   input.dataset.group = (layer.group) ? layer.group : false;
-  input.className = "layer";
+  input.className = "layer slide-toggle";
   input.style.cursor = "pointer";
   input.dataset.mapLayer = true;
   if (checked) input.checked = true;
   let label = document.createElement("label");
   label.setAttribute("for", layer.id);
   label.style.cursor = "pointer";
-  label.style.lineHeight = "24px" //need to make this relative to something
+  label.style.lineHeight = "32px" //need to make this relative to something
   if (layer.legend) {
-    label.innerText = layer.name;
+    label.innerText = (!layer.name) ? layer.id : layer.name;
     let legend = document.createElement("div");
     legend.innerHTML = layer.legend;
     label.appendChild(legend)
   }else{
-    label.innerText = layer.name;
+    label.innerText = (!layer.name) ? layer.id : layer.name;
   }
   div.appendChild(input);
   div.appendChild(label);
@@ -244,13 +295,88 @@ function getAllChecked(boxes) {
 
 function toggleChildren(div) {
   var children = div.children;
-  if (children.length > 1 && children[1].style.display === "none") {
-    for (var i = 1; i < children.length; i++) {
+  if (children.length > 1 && children[2].style.display === "none") {
+    for (var i = 2; i < children.length; i++) {
       if (!children[i].dataset.hidden) children[i].style.display = "block"
     }
   }else{
-    for (var i = 1; i < children.length; i++) {
+    for (var i = 2; i < children.length; i++) {
       children[i].style.display = "none"
     }
   }
+}
+
+
+function lcCreateDicrectory(directoryName) {
+
+    let accordian = document.createElement("div");
+    accordian.dataset.accordian = true;
+  
+    let button = document.createElement("button");
+    button.style.backgroundImage = "url('/minus.svg')";    
+
+    button.dataset.directoryToggle = true
+ 
+    accordian.appendChild(button);
+  
+    let d = document.createElement("div");
+  
+    d.style.fontSize = "18px";
+    d.style.background = "whitesmoke";
+    d.style.padding = "8px";
+    d.style.cursor = "pointer";
+  
+    d.id = directoryName.replace(" ", "");
+    d.innerText =  directoryName;
+    d.className = "layerControlDirectory";
+    d.dataset.name = directoryName;
+    d.dataset.directoryToggle = true
+
+    accordian.appendChild(d);
+    return accordian;
+}
+
+function lcCreateGroup(group, layers, map) {
+  let titleInputChecked = false;
+  // GET CHECKED STATUS OF LAYER GROUP
+  // for (let i = 0; i < layers.length; i++) {
+  //   let l = layers[i];
+  //   console.log(l)
+  //   if(map.getLayoutProperty(l.id, "visibility") === "visible") {
+  //     titleInputChecked = true
+  //     continue
+  //   }else{
+  //     break
+  //   }
+  // }
+
+  let titleInputContainer = document.createElement("div");
+  titleInputContainer.style.margin = "8px"
+
+  let titleInput = document.createElement("input");
+  titleInput.type = "checkbox";
+  let titleInputId = "layerGroup_" + group.replace(" ", "");
+  titleInput.id = titleInputId;
+  titleInput.style.display = "none";
+  titleInput.dataset.layergroup = group;
+
+  if (titleInputChecked) titleInput.checked = true
+
+  let titleInputLabel = document.createElement("label");
+  titleInputLabel.setAttribute("for", titleInputId);
+  titleInputLabel.style.cursor = "pointer";
+  titleInputLabel.dataset.layergroup = group;
+  titleInputLabel.style.display = "inline-flex";
+  titleInputLabel.style.fontWeight = "inline-flex";
+  titleInputLabel.textContent = group;
+
+  titleInputContainer.appendChild(titleInput);
+  titleInputContainer.appendChild(titleInputLabel);
+
+  return titleInputContainer;
+
+}
+
+function lcCreateLayerToggles(layer) {
+
 }

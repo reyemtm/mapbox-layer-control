@@ -1,0 +1,105 @@
+.layer-control {
+  min-width: 36px;
+  min-height: 36px;
+}
+
+/****
+LAYER CONTROL HOVER EFFECT
+****/
+
+.layer-control .layers {
+  width: 0;
+  height: 0;
+  visibility: hidden;
+  transition: 0s;
+}
+
+.layer-control .overlays {
+  visibility: hidden;
+  height: 0;
+  width: 0;
+  padding: 0px;
+  /* transition: 0.2s; */
+}
+
+.layer-control .layer-selector {
+  display: none;
+}
+
+.layer-control.active .layer-selector {
+  display: block;
+}
+
+.layer-control .layer-control--btn {
+  width: 36px;
+  height: 36px;
+  background-position: center;
+  background-size: cover;
+}
+
+.layer-control.active .layer-control--btn {
+  display: none;
+}
+
+.layer-control.active .overlays {
+  visibility: visible;
+  padding: 8px;
+  width: auto;
+  height: auto;
+}
+
+.layer-control .layer-group {
+  cursor: pointer;
+}
+
+.layer-control label {
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/****
+INPUT SLIDERS
+****/
+
+input.apple-switch {
+  vertical-align: top;
+  margin-top: 1px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+input.apple-switch {
+  position: relative;
+  -webkit-appearance: none;
+  outline: none;
+  width: 28px;
+  height: 16px;
+  background-color: #bcc3ce;
+  border-radius: 25px;
+  transition: .25s;
+  background-clip: padding-box;
+}
+
+input.apple-switch:after {
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: #fff;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow: none;
+  transition: .25s;
+  border: solid thin #bcc3ce;
+}
+
+input.apple-switch:checked {
+  box-shadow: inset 12px 0 0 0 #5685cc;
+  border-color: #5685cc;
+}
+
+input.apple-switch:checked:after {
+  left: 12px;
+  border: solid thin #5685cc;
+}

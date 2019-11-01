@@ -34,6 +34,12 @@
     display: none;
   }*/
 
+  .mgl-layerControl {
+    min-width: 200px
+  }
+  .mgl-layerControlCover {
+    display: none;
+  }
   .mgl-layerControl::before {
     height: 14px;
     width: 14px;
@@ -43,7 +49,7 @@
     top: 3px;
   }
 
-  .mgl-layerControl:hover .mgl-layerControlCover {
+  /* .mgl-layerControl:hover .mgl-layerControlCover {
     display: none;
   }
 
@@ -55,11 +61,28 @@
     overflow-x: auto;
     display: block;
     background-image: none;
+  } */
+
+  .mgl-layerControl button {
+    width: 30px;
+    height: 36px;
+    border: none;
+    float: left;
+    opacity: 0.4;
+    margin-right: 8px;
+    background-size: 24px;
+    background-position: center center;
+    background-color: transparent;
+    background-repeat: no-repeat;
+  }
+
+  .mgl-layerControl .layer {
+    margin: 8px;
   }
 
   /*https://codepen.io/takeradi/pen/rjJpKK*/
 
-  .checkbox input[type="checkbox"] {
+  /* .checkbox input[type="checkbox"] {
     opacity: 0;
     width: 0;
   }
@@ -72,8 +95,6 @@
   .checkbox label {
     position: relative;
     display: inline-block;
-
-    /*16px width of fake checkbox + 6px distance between fake checkbox and text*/
     padding-left: 22px;
   }
 
@@ -81,12 +102,9 @@
   .checkbox label::after {
     position: absolute;
     content: "";
-
-    /*Needed for the line-height to take effect*/
     display: inline-block;
   }
 
-  /*Outer box of the fake checkbox*/
   .checkbox label::before {
     height: 14px;
     width: 14px;
@@ -96,7 +114,6 @@
     top: 3px;
   }
 
-  /*Checkmark of the fake checkbox*/
   .checkbox label::after {
     height: 4px;
     width: 9px;
@@ -109,23 +126,76 @@
     top: 7px;
   }
 
-  /*Hide the checkmark by default*/
   .checkbox input[type="checkbox"]+label::after {
     content: none;
     color: white;
   }
 
-  /*Unhide on the checked state*/
   .checkbox input[type="checkbox"]:checked+label::after {
     content: "";
   }
 
-  /*Adding focus styles on the outer-box of the fake checkbox*/
   .checkbox input[type="checkbox"]:checked+label::before {
     background: #121212;
   }
 
-  /*Adding focus styles on the outer-box of the fake checkbox*/
   .checkbox input[type="checkbox"]:focus+label::before {
     outline: rgb(59, 153, 252) auto 5px;
-  }
+  } */
+
+  /****
+INPUT SLIDERS
+****/
+
+input.slide-toggle {
+  vertical-align: top;
+  margin-top: 1px;
+  margin-right: 8px;
+  cursor: pointer;
+  border: solid thin #bcc3ce;
+}
+
+input.slide-toggle:focus {
+  border-color: #121212; 
+}
+
+input.slide-toggle:focus:after {
+  height: 12px;
+}
+
+
+input.slide-toggle {
+  position: relative;
+  -webkit-appearance: none;
+  outline: none;
+  width: 28px;
+  height: 16px;
+  background-color: #bcc3ce;
+  border-radius: 25px;
+  transition: .25s;
+  background-clip: padding-box;
+}
+
+input.slide-toggle:after {
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: #fff;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  box-shadow: none;
+  transition: .25s;
+  border: solid thin #bcc3ce;
+}
+
+input.slide-toggle:checked {
+  box-shadow: inset 12px 0 0 0 #5685cc;
+  border-color: #5685cc;
+}
+
+input.slide-toggle:checked:after {
+  left: 12px;
+  border: solid thin #5685cc;
+}

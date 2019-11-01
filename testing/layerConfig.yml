@@ -1,0 +1,52 @@
+- id: counties
+  name: Counties
+  category: Category
+  type: fill
+  source:
+    type: geojson
+    data: counties.geojson
+  layout:
+    visibility: visible
+  paint:
+    fill-color: red
+    fill-outline-color: white
+    fill-opacity: 0.8
+- id: counties2
+  name: Counties 2
+  category: Category 2
+  type: fill
+  source:
+    type: geojson
+    data: counties.geojson
+  layout:
+    visibility: none
+  paint:
+    fill-color: skyblue
+    fill-outline-color: white
+    fill-opacity: 0.8
+- id: counties3
+  name: Counties 3
+  category: Category 3
+  type: fill
+  source:
+    type: geojson
+    data: counties.geojson
+  layout:
+    visibility: none
+  paint:
+    fill-color: green
+    fill-outline-color: white
+    fill-opacity: 0.8
+- id: counties4
+  name: Counties 4
+  category: Category 3
+  type: fill
+  source:
+    type: geojson
+    data: counties.geojson
+  layout:
+    visibility: none
+  paint:
+    fill-color: goldenrod
+    fill-outline-color: white
+    fill-opacity: 0.8

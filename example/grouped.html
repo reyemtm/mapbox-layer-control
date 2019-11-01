@@ -8,12 +8,15 @@
   <script src="mapbox-gl.js"></script>
   <link rel="stylesheet" href="mapbox-gl.css" />
   <link rel="stylesheet" href="../layerControl.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous" />  <style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
+    integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous" />
+  <style>
     * {
       font-family: -apple-system, BlinkMacSystemFont, Avenir, "Avenir Next",
-    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-    "Droid Sans", "Helvetica Neue", sans-serif;
+        "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+        "Droid Sans", "Helvetica Neue", sans-serif;
     }
+
     body {
       margin: 0;
       padding: 0;
@@ -33,7 +36,7 @@
   <div id='map'></div>
   <script type="module">
     import { layerControlSimple } from "../layerControlSimple.js"
-import { layerControlGrouped } from "../layerControlGrouped.js"
+    import { layerControlGrouped } from "../layerControlGrouped.js"
 
 
 /*Blank Mapbox GL Map*/
@@ -180,72 +183,63 @@ map.on('style.load', function() {
     }
   });
 
-  // map.addControl( new layerControlSimple({
-  //   layers: ["Counties", "Counties1", "Counties2"]
-  // }), "top-left");
+  //map layers Rail, rivers, riversCase, Lakes, States, Counties
 
-  map.addControl( new layerControlGrouped({
-    layers: [
-      {
-        name: "Transportation",
-        directory: "Cultural",
-        mapLayers: [
-          {
-          "name": "Rail",
-          "id": "Rail",
-          "legend": "<i class='fa fa-minus' style='color:black;'>&nbsp;</i>Railroads"
-          }
-        ]
-      },
-      {
-        name: "Hydro",
-        directory: "Environment",
-        "legend": `
-            <i class='fa fa-square' style='color:blue;'>&nbsp;</i>Lakes<br>
-            <i class='fa fa-minus' style='color:blue;'>&nbsp;</i>Rivers
-            `,
-        mapLayers: [
-          {
-          "name": "Lakes",
-          "id": "Lakes",
-          "legend": `
-            <i class='fa fa-square' style='color:blue;'>&nbsp;</i>Lakes<br>
-            `,
-          },
-          {
-            "name": "Rivers",
-            "id": "rivers",
-            "group": "rivers",
-            "legend": `
-            <i class='fa fa-minus' style='color:blue;'>&nbsp;</i>Rivers<br>
-            `         
-          },
-          {
-            "name": "",
-            "id": "riversCase",
-            "hidden": true,
-            "group": "rivers"
-          },
-        ]
-      },
-      {          
-        name: "Admin",
-        directory: "Administrative",
-        mapLayers: [{
-          "name": "States",
-          "id": "States",
-         },
-         {
-           "name": "Counties",
-           "id": "Counties"
-          }
-        ]
-      }
-    ]
-  }), "top-left");
+var config = [
+  {
+    id: "Counties",
+    hidden: false,
+    group: "Cadastral",
+    directory: "Admin"
+  },
+  {
+    id: "States",
+    hidden: false,
+    group: "Political",
+    directory: "Admin"
+  },
+  {
+    id: "Lakes",
+    hidden: false,
+    group: "Hydro",
+    directory: "Environment"
+  },
+  {
+    id: "riversCase",
+    hidden: true,
+    group: "Hydro",
+    directory: "Environment"
+  },
+  {
+    name: "Rivers",
+    id: "rivers",
+    hidden: false,
+    group: "Hydro",
+    directory: "Environment"
+  },
+  {
+    id: "Rail",
+    hidden: false,
+    directory: "Cultural"
+  }
+]
+  var layersConfig = [
+        {
+          name: "Rail",
+          id: "Rail",
+          directory: "Directory 1"
+        },
+        {
+          name: "Rivers",
+          id: "rivers",
+          directory: "Directory 2",
+          group: "Group 2"
+        }
+      ];
+
+  map.addControl( new layerControlGrouped(config), "top-left");
 
 });
-
 
 /*End Blank Map*/
 

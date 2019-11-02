@@ -1,51 +1,51 @@
 class layerControlGrouped {
 
-  constructor(config) {
-    config = (!config) ? [] : config;
+  constructor(options) {
+    options = (!options) ? [] : options;
 
-    config = config.reverse();
+    options = options.reverse();
 
-    this._config = config.slice()
+    this._options = options.slice()
 
     let directories = []; 
     let groups = [];
 
-    directories = this._config.reduce(function(i, layer) {
+    directories = this._options.reduce(function(i, layer) {
       return [...i, layer.directory]
     }, []);
 
     this._directories = [...new Set(directories)];
 
-    groups = this._config.reduce(function(i, layer) {
+    groups = this._options.reduce(function(i, layer) {
       if (!layer.group) layer.group = "Operational Layers"
       return [...i, layer.group]
     }, []);
 
     this._groups = [...new Set(groups)];
 
-    let temp = {};
+    let config = {};
 
     this._directories.map(function(d) {
-      config.map(function(layer) {
+      options.map(function(layer) {
         if (layer.directory === d) {
-          temp[layer.directory] = {
+          config[layer.directory] = {
           }
         }
       })
     })
 
-    this._config.map(function(l) {
+    this._options.map(function(l) {
       if (!l.group) l.group = "Operational Layers";
-      temp[l.directory][l.group] = []
+      config[l.directory][l.group] = []
     })
 
-    this._config.map(function(l) {
-      temp[l.directory][l.group].push(l)
+    this._options.map(function(l) {
+      config[l.directory][l.group].push(l)
     })
 
-    this._layerControlConfig = temp
+    this._layerControlConfig = config
 
-    console.log(temp)
+    console.log(config)
 
     // this._layerControlConfig = {
     //     directory1: {
@@ -70,32 +70,18 @@ class layerControlGrouped {
   }
 
   onAdd(map) {
-    
 
     this._map = map;
     let _this = this; //might use this later
 
-    // SETUP MAIN MAPBOX CONTROL = MOVE TO OTHER FUNCTION controlCreate()
-    this._div = document.createElement('div');
-    this._div["aria-label"] = "Layer Control";
-    this._div.title = "Layer Control";
-    this._div.className = 'mapboxgl-ctrl mapboxgl-ctrl-group mgl-layerControl';
-    this._div.style.fontSize = "14px"
-    this._div.style.overflowX = "hidden";
-    this._cover = document.createElement("div");
-    this._cover.style.width = "36px";
-    this._cover.style.height = "36px";
-    this._cover.style.zIndex = 1;
-    this._cover.style.position = "absolute";
-    this._cover.classList = "mgl-layerControlCover";
-    this._div.appendChild(this._cover);
+    // SETUP MAIN MAPBOX CONTROL = MOVE TO OTHER FUNCTION lcCreateButton()
+    this._div = lcCreateButton();
 
     // GET THE MAP LAYERS AND LAYER IDS
     this._mapLayers = this._map.getStyle().layers;
-    this._mapLayerIds = getMapLayerIds(this._mapLayers);
-  
+    this._mapLayerIds = mpxHelperGetMapLayerIds(this._mapLayers);
 
-    //BUILD DIRECTORIES, GROUPS AND LAYER TOGGLES
+    //BUILD DIRECTORIES, GROUPS, LAYER TOGGLES AND LEGENDS FROM THE layerControlConfig
     for (let d in this._layerControlConfig) {
 
       //CREATE DIRECTORY
@@ -107,21 +93,19 @@ class layerControlGrouped {
 
         let groupDiv = lcCreateGroup(g, this._layerControlConfig[d][g], map)
 
-      // CREATE INDIVIDUAL LAYER TOGGLES
-      for (let l = 0; l < this._config.length; l++) {
-        let layer = this._config[l];
-        if (layer.directory === directory && layer.group === g) {
-          // if (layer.group && group) {
-          //   let titleInputContainer = document.createElement("div");
-          // }
+        let groupLayers = this._layerControlConfig[d][g];
 
-
-          let checked = getMapLayerVisibility(this._mapLayers, this._mapLayerIds, layer.id);
-          let layerSelector = createLayerInputToggle(layer, checked);
+        // CREATE INDIVIDUAL LAYER TOGGLES
+        for (let l = 0; l < groupLayers.length; l++) {
+          let layer = groupLayers[l];
+          let style = mpxHelperGetStyle(this._mapLayers, layer);
+          if (!layer.legend && style) {
+            layer.simmpleLegend = lcCreateLegend(style)
+          }
+          let checked = mpxHelperGetLayerVisibility(this._mapLayers, this._mapLayerIds, layer.id);
+          let layerSelector = lcCreateLayerToggle(layer, checked);
           groupDiv.appendChild(layerSelector)
         }
-      }
-
         directoryDiv.appendChild(groupDiv);
       }
 
@@ -159,19 +143,17 @@ class layerControlGrouped {
       }
 
       if (e.target.dataset.mapLayer && e.target.dataset.group === "false") {
-        console.log(1)
         setLayerVisibility(e.target.checked, e.target.id);
         return
       }
 
       if (e.target.dataset.mapLayer) {
-        console.log(2)
-
+        e.stopPropagation();
         let group = e.target.dataset.group;
         let groupMembers = document.querySelectorAll("[data-group]");
         for (let i = 0; i < groupMembers.length; i++) {
           if (group != "false" && groupMembers[i].dataset.group === group) {
-            console.log(group)
+            console.log("data-map-layer data-group", group)
             setLayerVisibility(e.target.checked, groupMembers[i].id);
           }
         }
@@ -180,10 +162,12 @@ class layerControlGrouped {
 
       if (e.target.dataset.layergroup) {
         console.log("layergroup")
-        let inputs = e.target.parentElement.getElementsByClassName("layer");
+        let inputs = e.target.parentElement.querySelectorAll("[data-map-layer");
         console.log("inputs", inputs)
         // CHECK IF ANY OF THE BOXES ARE NOT CHECKED AND IF NOT THEM CHECK THEM ALL
-        if (!getAllChecked(inputs)) {
+        if (!domHelperGetAllChecked(inputs)) {
+          console.log("none are checked")
+          console.log(inputs.length)
           for (let i = 0; i < inputs.length; i++) {
             if (!inputs[i].checked) {
               inputs[i].click()
@@ -204,11 +188,11 @@ class layerControlGrouped {
 
       if (e.target.dataset.directoryToggle) {
         if (e.target.parentElement.children[2].style.display != "none") {
-          e.target.parentElement.children[0].style.backgroundImage = "url('/plus.svg')";
+          e.target.parentElement.children[0].style.backgroundImage = "url('../plus.svg')";
         }else{
-          e.target.parentElement.children[0].style.backgroundImage = "url('/minus.svg')";
+          e.target.parentElement.children[0].style.backgroundImage = "url('../minus.svg')";
         }
-        toggleChildren(e.target.parentElement)
+        domHelperToggleChildren(e.target.parentElement, 2)
         
         return
       }
@@ -231,18 +215,18 @@ export {
  * HELPER FUNCTIONS
  ****/
 
-function getMapLayerIds(layers) {
+function mpxHelperGetMapLayerIds(layers) {
   return layers.reduce((array, layer) => {
     return [...array, layer.id]
   }, [])
 }
 
-function getMapLayerVisibility(layers, ids, layer) {
+function mpxHelperGetLayerVisibility(layers, ids, layer) {
   var index = ids.indexOf(layer);
   return (layers[index].layout.visibility === "visible") ? true : false
 }
 
-function createLayerInputToggle(layer, checked, index) {
+function lcCreateLayerToggle(layer, checked, index) {
   let div = document.createElement("div");
   div.className = "checkbox";
   div.style.cursor = "pointer";
@@ -270,16 +254,20 @@ function createLayerInputToggle(layer, checked, index) {
     let legend = document.createElement("div");
     legend.innerHTML = layer.legend;
     label.appendChild(legend)
+  } else if (layer.simmpleLegend) {
+    label.innerHTML += layer.simmpleLegend;
+    label.innerHTML += (!layer.name) ? layer.id : layer.name;
   }else{
     label.innerText = (!layer.name) ? layer.id : layer.name;
   }
+  label.dataset.layerToggle = "true"
   div.appendChild(input);
   div.appendChild(label);
   
   return div
 }
 
-function getAllChecked(boxes) {
+function domHelperGetAllChecked(boxes) {
   let boolean = false;
   for (let i = 0; i < boxes.length; i++) {
     if (boxes[i].checked) {
@@ -293,14 +281,14 @@ function getAllChecked(boxes) {
   return boolean
 }
 
-function toggleChildren(div) {
+function domHelperToggleChildren(div, start) {
   var children = div.children;
-  if (children.length > 1 && children[2].style.display === "none") {
-    for (var i = 2; i < children.length; i++) {
+  if (children.length > 1 && children[start].style.display === "none") {
+    for (var i = start; i < children.length; i++) {
       if (!children[i].dataset.hidden) children[i].style.display = "block"
     }
   }else{
-    for (var i = 2; i < children.length; i++) {
+    for (var i = start; i < children.length; i++) {
       children[i].style.display = "none"
     }
   }
@@ -313,14 +301,12 @@ function lcCreateDicrectory(directoryName) {
     accordian.dataset.accordian = true;
   
     let button = document.createElement("button");
-    button.style.backgroundImage = "url('/minus.svg')";    
-
     button.dataset.directoryToggle = true
  
     accordian.appendChild(button);
   
     let d = document.createElement("div");
-  
+
     d.style.fontSize = "18px";
     d.style.background = "whitesmoke";
     d.style.padding = "8px";
@@ -365,7 +351,7 @@ function lcCreateGroup(group, layers, map) {
   let titleInputLabel = document.createElement("label");
   titleInputLabel.setAttribute("for", titleInputId);
   titleInputLabel.style.cursor = "pointer";
-  titleInputLabel.dataset.layergroup = group;
+  // titleInputLabel.dataset.layergroup = group;
   titleInputLabel.style.display = "inline-flex";
   titleInputLabel.style.fontWeight = "inline-flex";
   titleInputLabel.textContent = group;
@@ -377,6 +363,50 @@ function lcCreateGroup(group, layers, map) {
 
 }
 
-function lcCreateLayerToggles(layer) {
+function lcCreateButton() {
+  let div = document.createElement('div');
+  div["aria-label"] = "Layer Control";
+  div.title = "Layer Control";
+  div.className = 'mapboxgl-ctrl mapboxgl-ctrl-group mgl-layerControl';
+  div.style.fontSize = "16px"
+  div.style.overflowX = "hidden";
+  
+  let cover = document.createElement("div");
+  cover.style.width = "36px";
+  cover.style.height = "36px";
+  cover.style.zIndex = 1;
+  cover.style.position = "absolute";
+  cover.classList = "mgl-layerControlCover";
+  div.appendChild(cover);
+  
+  return div
+}
 
+function mpxHelperGetStyle(layers, layer) {
+  let layerConfig = layers.filter(function(l) {
+    return l.id === layer.id
+  })
+  let style = (!layerConfig[0].paint) ? false : layerConfig[0].paint
+
+  return style
+}
+
+function lcCreateLegend(style) {
+  let type = Object.keys(style)
+  let legend = false;
+  if (type.indexOf("line-color") > -1 && isString(style["line-color"])) {
+    legend = `<icon class='fa fa-minus ' style='color:${style["line-color"]};'></icon>`;
+  }
+  if (type.indexOf("fill-color") > -1 && isString(style["fill-color"])) {
+    legend = `<icon class='fa fa-square ' style='color:${style["fill-color"]};'></icon>`;
+  }
+  if (type.indexOf("circle-color") > -1 && isString(style["circle-color"])) {
+    legend = `<icon class='fa fa-circle ' style='color:${style["circle-color"]};'></icon>`;
+  }
+
+  return legend
+}
+
+function isString(value) {
+  return typeof value === 'string' || value instanceof String;
 }

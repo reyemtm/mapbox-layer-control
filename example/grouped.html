@@ -178,7 +178,13 @@ map.on('style.load', function() {
     
 
     'paint': {
-      'line-color': 'black',
+      'line-color': {
+        stops: [
+          [0,"red"],
+          [14, "blue"],
+          [18, "green"]
+        ]
+      },
       'line-width': 4
     }
   });

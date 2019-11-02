@@ -1,22 +1,26 @@
 class layerControlGrouped {
 
   constructor(options) {
-    options = (!options) ? [] : options;
+    options = (!options) ? {} : options;
 
-    options = options.reverse();
+    this._collapsed = false;
 
-    this._options = options.slice()
+    if (options.options && options.options.collapsed) {
+      this._collapsed = true;
+    }
+
+    this._layers = options.layers.reverse().slice()
 
     let directories = []; 
     let groups = [];
 
-    directories = this._options.reduce(function(i, layer) {
+    directories = this._layers.reduce(function(i, layer) {
       return [...i, layer.directory]
     }, []);
 
     this._directories = [...new Set(directories)];
 
-    groups = this._options.reduce(function(i, layer) {
+    groups = this._layers.reduce(function(i, layer) {
       if (!layer.group) layer.group = "Operational Layers"
       return [...i, layer.group]
     }, []);
@@ -26,7 +30,7 @@ class layerControlGrouped {
     let config = {};
 
     this._directories.map(function(d) {
-      options.map(function(layer) {
+      options.layers.map(function(layer) {
         if (layer.directory === d) {
           config[layer.directory] = {
           }
@@ -34,12 +38,12 @@ class layerControlGrouped {
       })
     })
 
-    this._options.map(function(l) {
+    this._layers.map(function(l) {
       if (!l.group) l.group = "Operational Layers";
       config[l.directory][l.group] = []
     })
 
-    this._options.map(function(l) {
+    this._layers.map(function(l) {
       config[l.directory][l.group].push(l)
     })
 
@@ -75,7 +79,7 @@ class layerControlGrouped {
     let _this = this; //might use this later
 
     // SETUP MAIN MAPBOX CONTROL = MOVE TO OTHER FUNCTION lcCreateButton()
-    this._div = lcCreateButton();
+    this._div = lcCreateButton(this._collapsed);
 
     // GET THE MAP LAYERS AND LAYER IDS
     this._mapLayers = this._map.getStyle().layers;
@@ -127,13 +131,20 @@ class layerControlGrouped {
      * ADD EVENT LISTENERS FOR THE LAYER CONTROL ALL ON THE CONTROL ITSELF
      ****/
     // this._div.addEventListener("mouseenter", function (e) {
-    //   // console.log(e.target)
+    //   e.target.classList.remove("collapsed")
+    //   return
+    // });
+
+    // this._div.addEventListener("mouseout", function (e) {
+    //   e.target.classList.add("collapsed")
+    //   return
     // });
 
     this._div.addEventListener("click", function (e) {
       console.log(e.target);
 
       if (e.target.className === "mgl-layerControlCover") {
+        e.target.parentElement.classList.remove("collapsed")
         return
       }
 
@@ -197,6 +208,12 @@ class layerControlGrouped {
         return
       }
     })
+
+    if (this._collapsed) {
+      this._map.on("click", function() {
+        _this._div.classList.add("collapsed")
+      })
+    }
 
     return this._div;
   }
@@ -299,6 +316,7 @@ function lcCreateDicrectory(directoryName) {
 
     let accordian = document.createElement("div");
     accordian.dataset.accordian = true;
+    accordian.style.backgroundColor = "white"
   
     let button = document.createElement("button");
     button.dataset.directoryToggle = true
@@ -351,7 +369,6 @@ function lcCreateGroup(group, layers, map) {
   let titleInputLabel = document.createElement("label");
   titleInputLabel.setAttribute("for", titleInputId);
   titleInputLabel.style.cursor = "pointer";
-  // titleInputLabel.dataset.layergroup = group;
   titleInputLabel.style.display = "inline-flex";
   titleInputLabel.style.fontWeight = "inline-flex";
   titleInputLabel.textContent = group;
@@ -363,19 +380,15 @@ function lcCreateGroup(group, layers, map) {
 
 }
 
-function lcCreateButton() {
+function lcCreateButton(collapsed) {
   let div = document.createElement('div');
   div["aria-label"] = "Layer Control";
   div.title = "Layer Control";
   div.className = 'mapboxgl-ctrl mapboxgl-ctrl-group mgl-layerControl';
-  div.style.fontSize = "16px"
-  div.style.overflowX = "hidden";
+  if (collapsed) div.classList.add("collapsed");
   
-  let cover = document.createElement("div");
-  cover.style.width = "36px";
-  cover.style.height = "36px";
-  cover.style.zIndex = 1;
-  cover.style.position = "absolute";
+  let cover = document.createElement("img");
+  cover.src="https://icongr.am/material/layers.svg";
   cover.classList = "mgl-layerControlCover";
   div.appendChild(cover);
   
@@ -398,7 +411,7 @@ function lcCreateLegend(style) {
     legend = `<icon class='fa fa-minus ' style='color:${style["line-color"]};'></icon>`;
   }
   if (type.indexOf("fill-color") > -1 && isString(style["fill-color"])) {
-    legend = `<icon class='fa fa-square ' style='color:${style["fill-color"]};'></icon>`;
+    legend = `<icon style='color:${style["fill-color"]};'>&#9632;</icon>`;
   }
   if (type.indexOf("circle-color") > -1 && isString(style["circle-color"])) {
     legend = `<icon class='fa fa-circle ' style='color:${style["circle-color"]};'></icon>`;

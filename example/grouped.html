@@ -39,197 +39,202 @@
     import { layerControlGrouped } from "../layerControlGrouped.js"
 
 
-/*Blank Mapbox GL Map*/
+    /*Blank Mapbox GL Map*/
 
-var map = new mapboxgl.Map({
-  container: 'map',
-  hash: true,
-  /*style: 'some mapbox style url*/
-  /*below is a blank style*/
-  style: {
-    "version": 8,
-    "name": "blank",
-    "sources": {
-      "blank": {
-        "type": "vector",
-        "url": ""
-      }
-    },
-    "layers": [{
-      "id": "background",
-      "type": "background",
-      "paint": {
-        "background-color": "skyblue"
-      }
-    }]
-  },
-  center: [-97.56, 39.59],
-  zoom: 4.68,
-  debug: 1
-});
-map.addControl(new mapboxgl.NavigationControl());
-map.addControl(new mapboxgl.FullscreenControl());
-
-map.on('style.load', function() {
-  map.addSource('counties', {
-    'type': 'geojson',
-    'data': 'counties.min.geojson'
-  });
-
-
-  map.addLayer({
-    'id': 'Counties',
-    'type': 'fill',    
-    'source': 'counties',
-    'layout': {
-      'visibility': 'visible'
-    },
-    
-
-    'paint': {
-      'fill-color': 'lightgray',
-      'fill-outline-color': 'white',
-      'fill-opacity': 0.9
-    }
-  });
-
-  map.addLayer({
-    'id': 'States',
-    'type': 'line',    
-    'source': {
-      type: "geojson",
-      data: "states.geojson"
-    },
-    'layout': {
-      'visibility': 'none'
-    },
-    
-
-    'paint': {
-      'line-color': '#121212',
-    }
-  });
-
-  map.addLayer({
-    'id': 'Lakes',
-    'type': 'fill',    
-    'source': {
-      type: "geojson",
-      data: "lakes.json"
-    },
-    'layout': {
-      'visibility': 'none'
-    },
-    
-
-    'paint': {
-      'fill-color': 'blue',
-      'fill-outline-color': 'white',
-      'fill-opacity': 0.9
-    }
-  });
-
-  map.addLayer({
-    'id': 'riversCase',
-    'type': 'line',    
-    'source': {
-      type: "geojson",
-      data: "rivers.geojson"
-    },
-    'layout': {
-      'visibility': 'none'
-    },
-    
-
-    'paint': {
-      'line-color': 'white',
-      'line-width': 6
-    }
-  });
-
-  map.addLayer({
-    'id': 'rivers',
-    'type': 'line',    
-    'source': {
-      type: "geojson",
-      data: "rivers.geojson"
-    },
-    'layout': {
-      'visibility': 'none'
-    },
-    
-
-    'paint': {
-      'line-color': 'blue',
-      'line-width': 3
-    }
-  });
-
-  map.addLayer({
-    'id': 'Rail',
-    'type': 'line',    
-    'source': {
-      type: "geojson",
-      data: "rail.geojson"
-    },
-    'layout': {
-      'visibility': 'none'
-    },
-    
-
-    'paint': {
-      'line-color': {
-        stops: [
-          [0,"red"],
-          [14, "blue"],
-          [18, "green"]
-        ]
+    var map = new mapboxgl.Map({
+      container: 'map',
+      hash: true,
+      /*style: 'some mapbox style url*/
+      /*below is a blank style*/
+      style: {
+        "version": 8,
+        "name": "blank",
+        "sources": {
+          "blank": {
+            "type": "vector",
+            "url": ""
+          }
+        },
+        "layers": [{
+          "id": "background",
+          "type": "background",
+          "paint": {
+            "background-color": "skyblue"
+          }
+        }]
       },
-      'line-width': 4
-    }
-  });
+      center: [-97.56, 39.59],
+      zoom: 4.68,
+      debug: 1
+    });
+    map.addControl(new mapboxgl.NavigationControl());
+    map.addControl(new mapboxgl.FullscreenControl());
 
-  //map layers Rail, rivers, riversCase, Lakes, States, Counties
+    map.on('style.load', function () {
+      map.addSource('counties', {
+        'type': 'geojson',
+        'data': 'counties.min.geojson'
+      });
 
-var config = [
-  {
-    id: "Counties",
-    hidden: false,
-    group: "Cadastral",
-    directory: "Admin"
-  },
-  {
-    id: "States",
-    hidden: false,
-    group: "Political",
-    directory: "Admin"
-  },
-  {
-    id: "Lakes",
-    hidden: false,
-    group: "Hydro",
-    directory: "Environment"
-  },
-  {
-    id: "riversCase",
-    hidden: true,
-    group: "Hydro",
-    directory: "Environment"
-  },
-  {
-    name: "Rivers",
-    id: "rivers",
-    hidden: false,
-    group: "Hydro",
-    directory: "Environment"
-  },
-  {
-    id: "Rail",
-    hidden: false,
-    directory: "Cultural"
-  }
-]
-  var layersConfig = [
+
+      map.addLayer({
+        'id': 'Counties',
+        'type': 'fill',
+        'source': 'counties',
+        'layout': {
+          'visibility': 'visible'
+        },
+
+
+        'paint': {
+          'fill-color': 'lightgray',
+          'fill-outline-color': 'white',
+          'fill-opacity': 0.9
+        }
+      });
+
+      map.addLayer({
+        'id': 'States',
+        'type': 'line',
+        'source': {
+          type: "geojson",
+          data: "states.geojson"
+        },
+        'layout': {
+          'visibility': 'none'
+        },
+
+
+        'paint': {
+          'line-color': '#121212',
+        }
+      });
+
+      map.addLayer({
+        'id': 'Lakes',
+        'type': 'fill',
+        'source': {
+          type: "geojson",
+          data: "lakes.json"
+        },
+        'layout': {
+          'visibility': 'none'
+        },
+
+
+        'paint': {
+          'fill-color': 'blue',
+          'fill-outline-color': 'white',
+          'fill-opacity': 0.9
+        }
+      });
+
+      map.addLayer({
+        'id': 'riversCase',
+        'type': 'line',
+        'source': {
+          type: "geojson",
+          data: "rivers.geojson"
+        },
+        'layout': {
+          'visibility': 'none'
+        },
+
+
+        'paint': {
+          'line-color': 'white',
+          'line-width': 6
+        }
+      });
+
+      map.addLayer({
+        'id': 'rivers',
+        'type': 'line',
+        'source': {
+          type: "geojson",
+          data: "rivers.geojson"
+        },
+        'layout': {
+          'visibility': 'none'
+        },
+
+
+        'paint': {
+          'line-color': 'blue',
+          'line-width': 3
+        }
+      });
+
+      map.addLayer({
+        'id': 'Rail',
+        'type': 'line',
+        'source': {
+          type: "geojson",
+          data: "rail.geojson"
+        },
+        'layout': {
+          'visibility': 'none'
+        },
+
+
+        'paint': {
+          'line-color': {
+            stops: [
+              [0, "red"],
+              [14, "blue"],
+              [18, "green"]
+            ]
+          },
+          'line-width': 4
+        }
+      });
+
+      //map layers Rail, rivers, riversCase, Lakes, States, Counties
+
+      var config = {
+        options: {
+          collapsed: true
+        },
+        layers: [
+          {
+            id: "Counties",
+            hidden: false,
+            group: "Cadastral",
+            directory: "Admin"
+          },
+          {
+            id: "States",
+            hidden: false,
+            group: "Political",
+            directory: "Admin"
+          },
+          {
+            id: "Lakes",
+            hidden: false,
+            group: "Hydro",
+            directory: "Environment"
+          },
+          {
+            id: "riversCase",
+            hidden: true,
+            group: "Hydro",
+            directory: "Environment"
+          },
+          {
+            name: "Rivers",
+            id: "rivers",
+            hidden: false,
+            group: "Hydro",
+            directory: "Environment"
+          },
+          {
+            id: "Rail",
+            hidden: false,
+            directory: "Cultural"
+          }
+        ]
+      }
+      var layersConfig = [
         {
           name: "Rail",
           id: "Rail",
@@ -243,13 +248,13 @@ var config = [
         }
       ];
 
-  map.addControl( new layerControlGrouped(config), "top-left");
+      map.addControl(new layerControlGrouped(config), "top-left");
 
-});
+    });
 
-/*End Blank Map*/
+    /*End Blank Map*/
 
-</script>
+  </script>
 
 </body>
 

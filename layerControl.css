@@ -14,61 +14,56 @@
   /****
   ****/
 
+  .mgl-layerControl {
+    font-size: 16px;
+  }
+
   /****
-  NEED TO CHANGE TO JS MOUSEENTER, MOUSELEAVE, CLICK FOR TOUCH/MOBILE OR JUST ADD A TITLE TO THE CONTROL
-  THE PROBLEM IS WHEN THE MINIMIZED CONTROL IS CLICKED ON MOBILE IT TRIGGERS A CLICK ON THE FIRST LAYER DIRECTORY
-  I COULD JUST ADD SOMETHING TO COVER THAT WITH Z-INDEX AND HIDE THIS ON HOVER...
   ****/
 
-  /*.mgl-layerControl {
+  .mgl-layerControl.collapsed {
     width: 36px;
     height: 36px;
-    color: transparent;
-    background-color: white;
     overflow: hidden;
-    background-image: url("https://icongr.am/material/layers.svg");
-    background-position: center;
   }
-
-  .mgl-layerControl .layerControlDirectory {
-    display: none;
-  }*/
-
-  .mgl-layerControl {
-    min-width: 200px
-  }
-  .mgl-layerControlCover {
-    display: none;
-  }
-  .mgl-layerControl::before {
-    height: 14px;
-    width: 14px;
-    border: 1px solid;
-    border-radius: 2px;
-    left: 0px;
-    top: 3px;
-  }
-
-  /* .mgl-layerControl:hover .mgl-layerControlCover {
+  .mgl-layerControl.collapsed > div {
     display: none;
   }
 
-  .mgl-layerControl:hover, 
-  .mgl-layerControl:hover .layerControlDirectory {
-    height: auto;
-    width: auto;
-    color: inherit;
-    overflow-x: auto;
+  .mgl-layerControl.collapsed:hover > div {
     display: block;
-    background-image: none;
-  } */
+  }
+
+  .mgl-layerControlCover {
+    width: 100%;
+    height: 100%;
+  }
+
+  .mgl-layerControl:not(.collapsed) > img,
+  .mgl-layerControl.collapsed:hover > img {
+    display: none;
+  }
+
+  .mgl-layerControl:not(.collapsed),
+  .mgl-layerControl.collapsed:hover {
+    height: auto;
+    width:  calc(100% + 20px);
+    overflow-x: hidden;
+    display: block;
+    overflow-y: auto;
+  }
+
+
+
+  /****
+  ****/
 
   .mgl-layerControl button {
     width: 30px;
     height: 36px;
     border: none;
-    float: left;
     opacity: 0.4;
+    float: left;
     background-size: 24px;
     background-position: center center;
     background-color: transparent;
@@ -176,7 +171,7 @@ input.slide-toggle {
   height: 16px;
   background-color: #bcc3ce;
   border-radius: 25px;
-  transition: .25s;
+  transition: 0.2s;
   background-clip: padding-box;
 }
 
@@ -190,7 +185,7 @@ input.slide-toggle:after {
   height: 12px;
   border-radius: 50%;
   box-shadow: none;
-  transition: .25s;
+  transition: 0.2s;
   border: solid thin #bcc3ce;
 }
 

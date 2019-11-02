@@ -180,12 +180,12 @@
         'paint': {
           'line-color': {
             stops: [
-              [0, "red"],
-              [14, "blue"],
-              [18, "green"]
+              [0, "lightgray"],
+              [14, "gray"],
+              [18, "black"]
             ]
           },
-          'line-width': 4
+          'line-width': 3
         }
       });
 
@@ -218,6 +218,7 @@
             id: "riversCase",
             hidden: true,
             group: "Hydro",
+            parent: "rivers",
             directory: "Environment"
           },
           {
@@ -225,6 +226,7 @@
             id: "rivers",
             hidden: false,
             group: "Hydro",
+            children: true,
             directory: "Environment"
           },
           {

@@ -153,18 +153,26 @@ class layerControlGrouped {
         return
       }
 
-      if (e.target.dataset.mapLayer && e.target.dataset.group === "false") {
+      if (e.target.dataset.mapLayer) {
         setLayerVisibility(e.target.checked, e.target.id);
+        if (e.target.dataset.children) {
+          let children = document.querySelectorAll("[data-parent]");
+          for (let i = 0; i < children.length; i++) {
+            if (children[i].dataset.parent === e.target.id) {
+              setLayerVisibility(e.target.checked, children[i].id);
+            }
+          }
+        }
         return
       }
 
-      if (e.target.dataset.mapLayer) {
+      if (e.target.dataset.mapLayer && e.target.dataset.group != false) {
         e.stopPropagation();
         let group = e.target.dataset.group;
         let groupMembers = document.querySelectorAll("[data-group]");
         for (let i = 0; i < groupMembers.length; i++) {
           if (group != "false" && groupMembers[i].dataset.group === group) {
-            console.log("data-map-layer data-group", group)
+            // console.log("data-map-layer data-group", group)
             setLayerVisibility(e.target.checked, groupMembers[i].id);
           }
         }
@@ -174,11 +182,11 @@ class layerControlGrouped {
       if (e.target.dataset.layergroup) {
         console.log("layergroup")
         let inputs = e.target.parentElement.querySelectorAll("[data-map-layer");
-        console.log("inputs", inputs)
+        // console.log("inputs", inputs)
         // CHECK IF ANY OF THE BOXES ARE NOT CHECKED AND IF NOT THEM CHECK THEM ALL
         if (!domHelperGetAllChecked(inputs)) {
-          console.log("none are checked")
-          console.log(inputs.length)
+          // console.log("none are checked")
+          // console.log(inputs.length)
           for (let i = 0; i < inputs.length; i++) {
             if (!inputs[i].checked) {
               inputs[i].click()
@@ -238,9 +246,9 @@ function mpxHelperGetMapLayerIds(layers) {
   }, [])
 }
 
-function mpxHelperGetLayerVisibility(layers, ids, layer) {
+function mpxHelperGetLayerVisibility(mapLayers, ids, layer) {
   var index = ids.indexOf(layer);
-  return (layers[index].layout.visibility === "visible") ? true : false
+  return (mapLayers[index].layout.visibility === "visible") ? true : false
 }
 
 function lcCreateLayerToggle(layer, checked, index) {
@@ -258,10 +266,23 @@ function lcCreateLayerToggle(layer, checked, index) {
   input.type = "checkbox"
   input.id = layer.id;
   input.dataset.group = (layer.group) ? layer.group : false;
+
+  if (layer.children) {
+    input.dataset.children = true
+  }
+  if (layer.parent) {
+    input.dataset.parent = layer.parent
+  }
   input.className = "layer slide-toggle";
   input.style.cursor = "pointer";
   input.dataset.mapLayer = true;
   if (checked) input.checked = true;
+
+  input.onclick = function() {
+    lcSetActiveLayers(this.id, this.checked)
+  }
+  
+
   let label = document.createElement("label");
   label.setAttribute("for", layer.id);
   label.style.cursor = "pointer";
@@ -422,4 +443,38 @@ function lcCreateLegend(style) {
 
 function isString(value) {
   return typeof value === 'string' || value instanceof String;
+}
+
+function lcGetActiveLayers(map, mapLayers, ids, layers) {
+  let _map = map;
+  let _mapLayers = mapLayers;
+  let _ids = ids;
+  let urlParams = new URLSearchParams(window.location.search);
+  let activeLayers = ([...urlParams.keys()]);
+  layers.map(function(l) {
+    let visibility = mpxHelperGetLayerVisibility(_mapLayers, _ids, l);
+    if (visibility) {
+      _map.setLayoutProperty(layer, "visibility", "visible")
+    }
+  });
+}
+
+//NEED TO ACCOUNT FOR HIDDEN LAYERS
+function lcSetActiveLayers(l,checked) {
+  let _layer = l;
+  let _visibility = checked;
+  let params = new URLSearchParams(window.location.search);
+  if (_visibility) {
+    params.set(_layer, true);
+    if (history.pushState) {
+      let url = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + params.toString() + window.location.hash;
+      window.history.pushState({path:url},'',url);
+    }
+  }else{
+    params.delete(_layer);
+    if (history.pushState) {
+      let url = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + params.toString() + window.location.hash;
+      window.history.pushState({path:url},'',url);
+    }
+  }
 }

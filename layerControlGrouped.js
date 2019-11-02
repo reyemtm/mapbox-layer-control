@@ -159,7 +159,8 @@ class layerControlGrouped {
           let children = document.querySelectorAll("[data-parent]");
           for (let i = 0; i < children.length; i++) {
             if (children[i].dataset.parent === e.target.id) {
-              setLayerVisibility(e.target.checked, children[i].id);
+              // setLayerVisibility(e.target.checked, children[i].id);
+              children[i].click()
             }
           }
         }
@@ -185,8 +186,6 @@ class layerControlGrouped {
         // console.log("inputs", inputs)
         // CHECK IF ANY OF THE BOXES ARE NOT CHECKED AND IF NOT THEM CHECK THEM ALL
         if (!domHelperGetAllChecked(inputs)) {
-          // console.log("none are checked")
-          // console.log(inputs.length)
           for (let i = 0; i < inputs.length; i++) {
             if (!inputs[i].checked) {
               inputs[i].click()
@@ -308,6 +307,7 @@ function lcCreateLayerToggle(layer, checked, index) {
 function domHelperGetAllChecked(boxes) {
   let boolean = false;
   for (let i = 0; i < boxes.length; i++) {
+    console.log(boxes[i].checked)
     if (boxes[i].checked) {
       boolean = true;
       continue

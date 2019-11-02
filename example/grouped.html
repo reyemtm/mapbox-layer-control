@@ -26,13 +26,22 @@
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 100%;
+      left: 300px;
+      width: calc(100% - 300px);
+    }
+    #sidebar {
+      width: 300px;
+      position: absolute;
+      left: 0;
+      height: 100%;
     }
   </style>
 </head>
 
 <body>
-
+  <div id="sidebar">
+    <h3 style="margin-left: 10px">Outside Map Example</h3>
+  </div>
   <div id='map'></div>
   <script type="module">
     import { layerControlSimple } from "../layerControlSimple.js"
@@ -84,8 +93,6 @@
         'layout': {
           'visibility': 'visible'
         },
-
-
         'paint': {
           'fill-color': 'lightgray',
           'fill-outline-color': 'white',
@@ -103,8 +110,6 @@
         'layout': {
           'visibility': 'none'
         },
-
-
         'paint': {
           'line-color': '#121212',
         }
@@ -120,8 +125,6 @@
         'layout': {
           'visibility': 'none'
         },
-
-
         'paint': {
           'fill-color': 'blue',
           'fill-outline-color': 'white',
@@ -139,8 +142,6 @@
         'layout': {
           'visibility': 'none'
         },
-
-
         'paint': {
           'line-color': 'white',
           'line-width': 6
@@ -157,8 +158,6 @@
         'layout': {
           'visibility': 'none'
         },
-
-
         'paint': {
           'line-color': 'blue',
           'line-width': 3
@@ -175,8 +174,6 @@
         'layout': {
           'visibility': 'none'
         },
-
-
         'paint': {
           'line-color': {
             stops: [
@@ -193,7 +190,7 @@
 
       var config = {
         options: {
-          collapsed: true
+          collapsed: false
         },
         layers: [
           {
@@ -250,7 +247,10 @@
         }
       ];
 
-      map.addControl(new layerControlGrouped(config), "top-left");
+      var sidebar = document.getElementById("sidebar")
+      var control = new layerControlGrouped(config);
+      sidebar.appendChild(control.onAdd(map))
+      // map.addControl(new layerControlGrouped(config), "top-left");
 
     });
 

@@ -432,7 +432,7 @@ function lcCreateLegend(style) {
     legend = `<icon class='fa fa-minus ' style='color:${style["line-color"]};'></icon>`;
   }
   if (type.indexOf("fill-color") > -1 && isString(style["fill-color"])) {
-    legend = `<icon style='color:${style["fill-color"]};'>&#9632;</icon>`;
+    legend = `<icon class='fa fa-square' style='color:${style["fill-color"]};'></icon>`;
   }
   if (type.indexOf("circle-color") > -1 && isString(style["circle-color"])) {
     legend = `<icon class='fa fa-circle ' style='color:${style["circle-color"]};'></icon>`;

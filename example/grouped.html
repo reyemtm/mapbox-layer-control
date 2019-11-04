@@ -43,6 +43,9 @@
     <h3 style="margin-left: 10px">Outside Map Example</h3>
   </div>
   <div id='map'></div>
+  <script>
+
+  </script>
   <script type="module">
     import { layerControlSimple } from "../layerControlSimple.js"
     import { layerControlGrouped } from "../layerControlGrouped.js"
@@ -78,6 +81,16 @@
     });
     map.addControl(new mapboxgl.NavigationControl());
     map.addControl(new mapboxgl.FullscreenControl());
+
+    // document.getElementById("map").addEventListener("mousemove", function(e) {
+    //   console.log(e.clientX, e.clientY)
+    //   var width = window.innerWidth;
+    //   if (width - e.clientX < 60) {
+    //     document.querySelector(".mapboxgl-ctrl-top-right").classList.add("visible")
+    //   }else{
+    //     document.querySelector(".mapboxgl-ctrl-top-right").classList.remove("visible")
+    //   }
+    // })
 
     map.on('style.load', function () {
       map.addSource('counties', {

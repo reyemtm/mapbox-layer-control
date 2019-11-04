@@ -11,6 +11,25 @@
     border-radius: 2px;
   }
 
+  /* .mapboxgl-ctrl-top-right {
+    right: -100px;
+  }
+  .mapboxgl-ctrl-top-left {
+    left: -100px
+  }
+  .mapboxgl-ctrl-top-right,
+  .mapboxgl-ctrl-top-left {
+    transition: 0.3s ease-in-out;
+    height: 100vh;
+    min-width: 60px;
+  }
+
+  .mapboxgl-ctrl-top-right.visible {
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    width: 60px;
+  } */
+
   /****
   ****/
 

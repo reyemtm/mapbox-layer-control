@@ -88,7 +88,10 @@
     background-color: transparent;
     background-repeat: no-repeat;
     background-image: url('minus.svg'); 
-    /* content: url("https://icongr.am/octicons/chevron-right.svg")    */
+  }
+
+  .mgl-layerControl button.collapsed {
+    background-image: url('plus.svg'); 
   }
 
   .mgl-layerControl icon {
@@ -121,6 +124,10 @@
   .mgl-layerControl .layer.side-toggle,
   .mgl-layerControl label {
     cursor: pointer;
+  }
+
+  .mgl-layerControl label {
+    line-height: 28px;
   }
 
   /*https://codepen.io/takeradi/pen/rjJpKK*/
@@ -193,7 +200,7 @@ INPUT SLIDERS
 input.slide-toggle {
   vertical-align: top;
   margin-top: 1px;
-  margin: 10px 8px;
+  margin: 8px;
   cursor: pointer;
   border: solid thin #bcc3ce;
   position: relative;

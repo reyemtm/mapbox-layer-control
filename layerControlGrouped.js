@@ -208,9 +208,9 @@ class layerControlGrouped {
 
       if (e.target.dataset.directoryToggle) {
         if (e.target.parentElement.children[2].style.display != "none") {
-          e.target.parentElement.children[0].style.backgroundImage = "url('../plus.svg')";
+          e.target.parentElement.children[0].className = "collapsed"
         }else{
-          e.target.parentElement.children[0].style.backgroundImage = "url('../minus.svg')";
+          e.target.parentElement.children[0].className = ""
         }
         domHelper.ToggleChildren(e.target.parentElement, 2)
         
@@ -274,7 +274,6 @@ function lcCreateLayerToggle(layer, checked, index) {
   
   let label = document.createElement("label");
   label.setAttribute("for", layer.id);
-  label.style.lineHeight = "32px" //need to make this relative to something
   if (layer.legend) {
     label.innerText = (!layer.name) ? layer.id : layer.name;
     let legend = document.createElement("div");
@@ -335,7 +334,7 @@ function lcCreateGroup(group, layers, map) {
   // }
 
   let titleInputContainer = document.createElement("div");
-  titleInputContainer.style.margin = "4px 8px 8px"
+  titleInputContainer.style.margin = "4px 0 4px 8px"
 
   let titleInput = document.createElement("input");
   titleInput.type = "checkbox";
@@ -350,7 +349,7 @@ function lcCreateGroup(group, layers, map) {
   titleInputLabel.setAttribute("for", titleInputId);
   titleInputLabel.style.cursor = "pointer";
   titleInputLabel.style.display = "inline-flex";
-  titleInputLabel.style.fontWeight = "inline-flex";
+  titleInputLabel.style.fontWeight = "500";
   titleInputLabel.textContent = group;
 
   titleInputContainer.appendChild(titleInput);

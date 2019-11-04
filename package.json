@@ -1,0 +1,28 @@
+{
+  "name": "mapbox-layer-control",
+  "version": "0.0.1",
+  "description": "A simple Mapbox GL JS layer control.",
+  "main": "layerControlGrouped.js",
+  "directories": {
+    "example": "example",
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reyemtm/mapbox-layer-control.git"
+  },
+  "keywords": [
+    "mapbox",
+    "webmaps",
+    "gis"
+  ],
+  "author": "Malcolm Meyer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/reyemtm/mapbox-layer-control/issues"
+  },
+  "homepage": "https://github.com/reyemtm/mapbox-layer-control#readme"
+}

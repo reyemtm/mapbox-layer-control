@@ -79,23 +79,48 @@
 
   .mgl-layerControl button {
     width: 30px;
-    height: 36px;
+    height: 40px;
     border: none;
-    opacity: 0.4;
+    opacity: 0.6;
     float: left;
-    background-size: 24px;
+    background-size: 20px;
     background-position: center center;
     background-color: transparent;
     background-repeat: no-repeat;
-    background-image: url('minus.svg');    
-  }
-
-  .mgl-layerControl .layer {
-    margin: 8px;
+    background-image: url('minus.svg'); 
+    /* content: url("https://icongr.am/octicons/chevron-right.svg")    */
   }
 
   .mgl-layerControl icon {
     margin-right: 6px
+  }
+
+  .mgl-layerControlLegend {
+    margin-left: 20px;
+    max-width: calc(100% - 32px);
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .mgl-layerControlDirectory {
+    transition: height 0.4s ease-in-out;
+    height: auto;
+    overflow: hidden;
+    border-bottom: solid thin #e0e0e0;
+  }
+
+  .mgl-layerControlDirectory > .directory {
+    font-size: 18px;
+    background: #f5f5f5;
+    padding: 8px;
+    cursor: pointer;
+  }
+
+  .mgl-layerControl .checkbox,
+  .mgl-layerControl button,
+  .mgl-layerControl .layer.side-toggle,
+  .mgl-layerControl label {
+    cursor: pointer;
   }
 
   /*https://codepen.io/takeradi/pen/rjJpKK*/
@@ -168,27 +193,15 @@ INPUT SLIDERS
 input.slide-toggle {
   vertical-align: top;
   margin-top: 1px;
-  margin-right: 8px;
+  margin: 10px 8px;
   cursor: pointer;
   border: solid thin #bcc3ce;
-}
-
-input.slide-toggle:focus {
-  border-color: #121212; 
-}
-
-input.slide-toggle:focus:after {
-  height: 12px;
-}
-
-
-input.slide-toggle {
   position: relative;
   -webkit-appearance: none;
   outline: none;
-  width: 28px;
-  height: 16px;
-  background-color: #bcc3ce;
+  width: 26px;
+  height: 12px;
+  background-color: #e0e0e0;
   border-radius: 25px;
   transition: 0.2s;
   background-clip: padding-box;
@@ -200,20 +213,30 @@ input.slide-toggle:after {
   top: 0px;
   left: 0px;
   background: #fff;
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   box-shadow: none;
   transition: 0.2s;
-  border: solid thin #bcc3ce;
+  border: solid thin #fff;
 }
 
+input.slide-toggle:focus {
+  border-color: #0d84b3; 
+  box-shadow: 0 0 0 0.1rem rgba(13,132,179,.2);
+}
+
+/* input.slide-toggle:focus:after {
+  height: 8px;
+} */
+
 input.slide-toggle:checked {
-  box-shadow: inset 12px 0 0 0 #5685cc;
-  border-color: #5685cc;
+  background: #0d84b3;
+  border-color: #0d84b3;
+  /* border-color: #40608b; */
 }
 
 input.slide-toggle:checked:after {
-  left: 12px;
-  border: solid thin #5685cc;
+  left: 14px;
+  /* border: solid thin #0d84b3; */
 }

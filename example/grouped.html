@@ -53,7 +53,7 @@
 
     /*Blank Mapbox GL Map*/
 
-    var map = new mapboxgl.Map({
+    var mglMap = new mapboxgl.Map({
       container: 'map',
       hash: true,
       /*style: 'some mapbox style url*/
@@ -79,8 +79,8 @@
       zoom: 4.68,
       debug: 1
     });
-    map.addControl(new mapboxgl.NavigationControl());
-    map.addControl(new mapboxgl.FullscreenControl());
+    mglMap.addControl(new mapboxgl.NavigationControl());
+    mglMap.addControl(new mapboxgl.FullscreenControl());
 
     // document.getElementById("map").addEventListener("mousemove", function(e) {
     //   console.log(e.clientX, e.clientY)
@@ -92,19 +92,33 @@
     //   }
     // })
 
-    map.on('style.load', function () {
-      map.addSource('counties', {
+    mglMap.on('style.load', function () {
+      mglMap.addSource('counties', {
         'type': 'geojson',
         'data': 'counties.min.geojson'
       });
 
 
-      map.addLayer({
-        'id': 'Counties',
+      mglMap.addLayer({
+        'id': 'CountiesbASE',
         'type': 'fill',
         'source': 'counties',
         'layout': {
           'visibility': 'visible'
+        },
+        'paint': {
+          'fill-color': 'transparent',
+          'fill-outline-color': 'white',
+          'fill-opacity': 0.5
+        }
+      });
+
+      mglMap.addLayer({
+        'id': 'Counties',
+        'type': 'fill',
+        'source': 'counties',
+        'layout': {
+          'visibility': 'none'
         },
         'paint': {
           'fill-color': 'lightgray',
@@ -113,7 +127,7 @@
         }
       });
 
-      map.addLayer({
+      mglMap.addLayer({
         'id': 'States',
         'type': 'line',
         'source': {
@@ -128,7 +142,7 @@
         }
       });
 
-      map.addLayer({
+      mglMap.addLayer({
         'id': 'Lakes',
         'type': 'fill',
         'source': {
@@ -145,7 +159,7 @@
         }
       });
 
-      map.addLayer({
+      mglMap.addLayer({
         'id': 'riversCase',
         'type': 'line',
         'source': {
@@ -161,7 +175,7 @@
         }
       });
 
-      map.addLayer({
+      mglMap.addLayer({
         'id': 'rivers',
         'type': 'line',
         'source': {
@@ -177,7 +191,7 @@
         }
       });
 
-      map.addLayer({
+      mglMap.addLayer({
         'id': 'Rail',
         'type': 'line',
         'source': {
@@ -190,8 +204,8 @@
         'paint': {
           'line-color': {
             stops: [
-              [0, "lightgray"],
-              [14, "gray"],
+              [0, "black"],
+              [14, "black"],
               [18, "black"]
             ]
           },
@@ -242,7 +256,8 @@
           {
             id: "Rail",
             hidden: false,
-            directory: "Cultural"
+            directory: "Cultural",
+            legend: "<icon class='fa fa-minus' style='color:red;'></icon> Legend defined in config<br><icon class='fa fa-minus' style='color:black;'></icon> Toggles when layer is off"
           }
         ]
       }
@@ -262,8 +277,8 @@
 
       var sidebar = document.getElementById("sidebar")
       var control = new layerControlGrouped(config);
-      sidebar.appendChild(control.onAdd(map))
-      // map.addControl(new layerControlGrouped(config), "top-left");
+      sidebar.appendChild(control.onAdd(mglMap))
+      // mglMap.addControl(new layerControlGrouped(config), "top-left");
 
     });
 

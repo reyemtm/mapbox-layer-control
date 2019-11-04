@@ -1,3 +1,15 @@
+/***
+ * TODO
+ * [ ] ADD ALL EXTERNAL FUNCTIONS AS IMPORTS DOM HELPERS AND MBX HELPERS
+ * [ ] ADD NUMBER NEXT TO LAYER GROUP OR LAYER DIRECTORY SHOWING HOW MANY LAYERS ARE TURNED ON
+ * [ ] ADD MORE DOCS
+ * [ ] ADD ZOOM LEVEL VISIBILITY ON TOGGLES MAKE INACTIVE ON ZOOMEND ADD FUNCTION TO CHECK FOR VISIBILITY
+ */
+
+import * as mglHelper  from "./lib/mglHelpers.js";
+import * as domHelper  from "./lib/domHelpers.js";
+
+
 class layerControlGrouped {
 
   constructor(options) {
@@ -51,6 +63,7 @@ class layerControlGrouped {
 
     console.log(config)
 
+    // TARGET CONFIG LAYOUT
     // this._layerControlConfig = {
     //     directory1: {
     //       groupName: [
@@ -78,12 +91,15 @@ class layerControlGrouped {
     this._map = map;
     let _this = this; //might use this later
 
-    // SETUP MAIN MAPBOX CONTROL = MOVE TO OTHER FUNCTION lcCreateButton()
+    // SETUP MAIN MAPBOX CONTROL
     this._div = lcCreateButton(this._collapsed);
 
     // GET THE MAP LAYERS AND LAYER IDS
+
+    mglHelper.GetActiveLayers(this._map, this._layers)
+
     this._mapLayers = this._map.getStyle().layers;
-    this._mapLayerIds = mpxHelperGetMapLayerIds(this._mapLayers);
+    this._mapLayerIds = mglHelper.GetMapLayerIds(this._mapLayers);
 
     //BUILD DIRECTORIES, GROUPS, LAYER TOGGLES AND LEGENDS FROM THE layerControlConfig
     for (let d in this._layerControlConfig) {
@@ -102,11 +118,11 @@ class layerControlGrouped {
         // CREATE INDIVIDUAL LAYER TOGGLES
         for (let l = 0; l < groupLayers.length; l++) {
           let layer = groupLayers[l];
-          let style = mpxHelperGetStyle(this._mapLayers, layer);
+          let style = mglHelper.GetStyle(this._mapLayers, layer);
           if (!layer.legend && style) {
-            layer.simmpleLegend = lcCreateLegend(style)
+            layer.simpleLegend = lcCreateLegend(style)
           }
-          let checked = mpxHelperGetLayerVisibility(this._mapLayers, this._mapLayerIds, layer.id);
+          let checked = mglHelper.GetLayerVisibility(this._mapLayers, this._mapLayerIds, layer.id);
           let layerSelector = lcCreateLayerToggle(layer, checked);
           groupDiv.appendChild(layerSelector)
         }
@@ -114,17 +130,6 @@ class layerControlGrouped {
       }
 
       this._div.appendChild(directoryDiv)
-    }
-
-    /****
-     * PUTTING THIS HERE SO AS NOT TO HAVE TO PASS IN THE MAP
-     ****/
-    function setLayerVisibility(checked, layer) {
-      // console.log("layer", layer, "checked", checked)
-      let visibility = (checked === true) ? 'visible' : 'none';
-      
-      // console.log("the", layer, "has visibility", visibility)
-      map.setLayoutProperty(layer, 'visibility', visibility);
     }
 
     /****
@@ -154,12 +159,11 @@ class layerControlGrouped {
       }
 
       if (e.target.dataset.mapLayer) {
-        setLayerVisibility(e.target.checked, e.target.id);
+        mglHelper.SetLayerVisibility(map, e.target.checked, e.target.id);
         if (e.target.dataset.children) {
           let children = document.querySelectorAll("[data-parent]");
           for (let i = 0; i < children.length; i++) {
             if (children[i].dataset.parent === e.target.id) {
-              // setLayerVisibility(e.target.checked, children[i].id);
               children[i].click()
             }
           }
@@ -173,8 +177,7 @@ class layerControlGrouped {
         let groupMembers = document.querySelectorAll("[data-group]");
         for (let i = 0; i < groupMembers.length; i++) {
           if (group != "false" && groupMembers[i].dataset.group === group) {
-            // console.log("data-map-layer data-group", group)
-            setLayerVisibility(e.target.checked, groupMembers[i].id);
+            mglHelper.SetLayerVisibility(map, e.target.checked, groupMembers[i].id);
           }
         }
         return
@@ -183,9 +186,8 @@ class layerControlGrouped {
       if (e.target.dataset.layergroup) {
         console.log("layergroup")
         let inputs = e.target.parentElement.querySelectorAll("[data-map-layer");
-        // console.log("inputs", inputs)
         // CHECK IF ANY OF THE BOXES ARE NOT CHECKED AND IF NOT THEM CHECK THEM ALL
-        if (!domHelperGetAllChecked(inputs)) {
+        if (!domHelper.GetAllChecked(inputs)) {
           for (let i = 0; i < inputs.length; i++) {
             if (!inputs[i].checked) {
               inputs[i].click()
@@ -210,7 +212,7 @@ class layerControlGrouped {
         }else{
           e.target.parentElement.children[0].style.backgroundImage = "url('../minus.svg')";
         }
-        domHelperToggleChildren(e.target.parentElement, 2)
+        domHelper.ToggleChildren(e.target.parentElement, 2)
         
         return
       }
@@ -239,21 +241,10 @@ export {
  * HELPER FUNCTIONS
  ****/
 
-function mpxHelperGetMapLayerIds(layers) {
-  return layers.reduce((array, layer) => {
-    return [...array, layer.id]
-  }, [])
-}
-
-function mpxHelperGetLayerVisibility(mapLayers, ids, layer) {
-  var index = ids.indexOf(layer);
-  return (mapLayers[index].layout.visibility === "visible") ? true : false
-}
-
 function lcCreateLayerToggle(layer, checked, index) {
   let div = document.createElement("div");
   div.className = "checkbox";
-  div.style.cursor = "pointer";
+  div.title = "Map Layer";
 
   if (layer.hidden) {
     div.style.display = "none";
@@ -273,71 +264,45 @@ function lcCreateLayerToggle(layer, checked, index) {
     input.dataset.parent = layer.parent
   }
   input.className = "layer slide-toggle";
-  input.style.cursor = "pointer";
   input.dataset.mapLayer = true;
   if (checked) input.checked = true;
 
   input.onclick = function() {
     lcSetActiveLayers(this.id, this.checked)
+    lcSetLegendVisibility(this)
   }
   
-
   let label = document.createElement("label");
   label.setAttribute("for", layer.id);
-  label.style.cursor = "pointer";
   label.style.lineHeight = "32px" //need to make this relative to something
   if (layer.legend) {
     label.innerText = (!layer.name) ? layer.id : layer.name;
     let legend = document.createElement("div");
+    legend.className = "mgl-layerControlLegend";
     legend.innerHTML = layer.legend;
+    if (!checked) {
+      legend.style.display = "none"
+    }
     label.appendChild(legend)
-  } else if (layer.simmpleLegend) {
-    label.innerHTML += layer.simmpleLegend;
+  } else if (layer.simpleLegend) {
+    label.innerHTML += layer.simpleLegend;
     label.innerHTML += (!layer.name) ? layer.id : layer.name;
   }else{
     label.innerText = (!layer.name) ? layer.id : layer.name;
   }
-  label.dataset.layerToggle = "true"
+  label.dataset.layerToggle = "true";
   div.appendChild(input);
   div.appendChild(label);
   
   return div
 }
 
-function domHelperGetAllChecked(boxes) {
-  let boolean = false;
-  for (let i = 0; i < boxes.length; i++) {
-    console.log(boxes[i].checked)
-    if (boxes[i].checked) {
-      boolean = true;
-      continue
-    } else {
-      boolean = false
-      break
-    }
-  }
-  return boolean
-}
-
-function domHelperToggleChildren(div, start) {
-  var children = div.children;
-  if (children.length > 1 && children[start].style.display === "none") {
-    for (var i = start; i < children.length; i++) {
-      if (!children[i].dataset.hidden) children[i].style.display = "block"
-    }
-  }else{
-    for (var i = start; i < children.length; i++) {
-      children[i].style.display = "none"
-    }
-  }
-}
-
-
 function lcCreateDicrectory(directoryName) {
 
     let accordian = document.createElement("div");
     accordian.dataset.accordian = true;
-    accordian.style.backgroundColor = "white"
+    accordian.style.backgroundColor = "white";
+    accordian.className = "mgl-layerControlDirectory";
   
     let button = document.createElement("button");
     button.dataset.directoryToggle = true
@@ -345,15 +310,9 @@ function lcCreateDicrectory(directoryName) {
     accordian.appendChild(button);
   
     let d = document.createElement("div");
-
-    d.style.fontSize = "18px";
-    d.style.background = "whitesmoke";
-    d.style.padding = "8px";
-    d.style.cursor = "pointer";
-  
+    d.className = "directory" 
     d.id = directoryName.replace(" ", "");
     d.innerText =  directoryName;
-    d.className = "layerControlDirectory";
     d.dataset.name = directoryName;
     d.dataset.directoryToggle = true
 
@@ -376,7 +335,7 @@ function lcCreateGroup(group, layers, map) {
   // }
 
   let titleInputContainer = document.createElement("div");
-  titleInputContainer.style.margin = "8px"
+  titleInputContainer.style.margin = "4px 8px 8px"
 
   let titleInput = document.createElement("input");
   titleInput.type = "checkbox";
@@ -404,7 +363,6 @@ function lcCreateGroup(group, layers, map) {
 function lcCreateButton(collapsed) {
   let div = document.createElement('div');
   div["aria-label"] = "Layer Control";
-  div.title = "Layer Control";
   div.className = 'mapboxgl-ctrl mapboxgl-ctrl-group mgl-layerControl';
   if (collapsed) div.classList.add("collapsed");
   
@@ -414,15 +372,6 @@ function lcCreateButton(collapsed) {
   div.appendChild(cover);
   
   return div
-}
-
-function mpxHelperGetStyle(layers, layer) {
-  let layerConfig = layers.filter(function(l) {
-    return l.id === layer.id
-  })
-  let style = (!layerConfig[0].paint) ? false : layerConfig[0].paint
-
-  return style
 }
 
 function lcCreateLegend(style) {
@@ -445,21 +394,6 @@ function isString(value) {
   return typeof value === 'string' || value instanceof String;
 }
 
-function lcGetActiveLayers(map, mapLayers, ids, layers) {
-  let _map = map;
-  let _mapLayers = mapLayers;
-  let _ids = ids;
-  let urlParams = new URLSearchParams(window.location.search);
-  let activeLayers = ([...urlParams.keys()]);
-  layers.map(function(l) {
-    let visibility = mpxHelperGetLayerVisibility(_mapLayers, _ids, l);
-    if (visibility) {
-      _map.setLayoutProperty(layer, "visibility", "visible")
-    }
-  });
-}
-
-//NEED TO ACCOUNT FOR HIDDEN LAYERS
 function lcSetActiveLayers(l,checked) {
   let _layer = l;
   let _visibility = checked;
@@ -476,5 +410,14 @@ function lcSetActiveLayers(l,checked) {
       let url = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + params.toString() + window.location.hash;
       window.history.pushState({path:url},'',url);
     }
+  }
+}
+
+function lcSetLegendVisibility(e) {
+  console.log(e.parentElement.scrollHeight)
+  let _legend = e.parentElement.querySelectorAll(".mgl-layerControlLegend");
+  let _display = (!e.checked) ? "none" : "block";
+  for (let i = 0; i < _legend.length; i++) {
+    _legend[i].style.display = _display
   }
 }

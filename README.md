@@ -8,6 +8,8 @@
 
 This is a simple layer control for Mapbox GL JS maps inspired by the Gartrell Group legend control. The layers need to already exist in the map. Each layer should only be added once to the control. The control does not control map layer indexing. The layers should be added to the control in the same order that they have been added to the map (meaning the top layer is added last). The control simply adjusts the visibility layout property of the layer. In the grouped control, the group name toggles all the layers in the group. The control can have hidden layers that get toggled just like other layers. Layers have legends added automatically if they are a line, circle or fill with a single color. They can also have legend written in HTML.
 
+Ideally one would add the operational layers to the map and the layers to this control with a master layer config JSON file. The control will also add url parameters for any layers turned on, allowing the map state to be shared. If this functionality is desired it is best to leave all layers off initially and let the control turn them on with query parameters, as this function will not turn off layers that are initially visible.
+
 To Do:
 
 * [ ] ADD DOCUMENTATION

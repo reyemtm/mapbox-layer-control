@@ -213,8 +213,6 @@
         }
       });
 
-      //map layers Rail, rivers, riversCase, Lakes, States, Counties
-
       var config = {
         options: {
           collapsed: false
@@ -261,19 +259,6 @@
           }
         ]
       }
-      var layersConfig = [
-        {
-          name: "Rail",
-          id: "Rail",
-          directory: "Directory 1"
-        },
-        {
-          name: "Rivers",
-          id: "rivers",
-          directory: "Directory 2",
-          group: "Group 2"
-        }
-      ];
 
       var sidebar = document.getElementById("sidebar")
       var control = new layerControlGrouped(config);

@@ -87,11 +87,11 @@
     background-position: center center;
     background-color: transparent;
     background-repeat: no-repeat;
-    background-image: url('minus.svg'); 
+    background-image: url('./minus.svg'); 
   }
 
   .mgl-layerControl button.collapsed {
-    background-image: url('plus.svg'); 
+    background-image: url('./plus.svg'); 
   }
 
   .mgl-layerControl icon {
@@ -127,7 +127,7 @@
   }
 
   .mgl-layerControl label {
-    line-height: 28px;
+    line-height: 24px;
   }
 
   /*https://codepen.io/takeradi/pen/rjJpKK*/
@@ -200,7 +200,6 @@ INPUT SLIDERS
 input.slide-toggle {
   vertical-align: top;
   margin-top: 1px;
-  margin: 8px;
   cursor: pointer;
   border: solid thin #bcc3ce;
   position: relative;
@@ -212,6 +211,7 @@ input.slide-toggle {
   border-radius: 25px;
   transition: 0.2s;
   background-clip: padding-box;
+  vertical-align: middle;
 }
 
 input.slide-toggle:after {
@@ -220,8 +220,8 @@ input.slide-toggle:after {
   top: 0px;
   left: 0px;
   background: #fff;
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   box-shadow: none;
   transition: 0.2s;

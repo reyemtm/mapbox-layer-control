@@ -24,13 +24,7 @@ To Do:
 * [x] ADD LEGEND ITEMS
 * [x] ADD COLLAPSIBLE DIRECTORY HEADINGS
 
-
-
-![](grouped.jpg)
-
-
 ![](simple.jpg)
-
 
 ```javascript
 map.addControl( new layerControlSimple({

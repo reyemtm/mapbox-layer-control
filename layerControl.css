@@ -79,7 +79,7 @@
 
   .mgl-layerControl button {
     width: 30px;
-    height: 40px;
+    height: 36px;
     border: none;
     opacity: 0.6;
     float: left;
@@ -127,9 +127,12 @@
   }
 
   .mgl-layerControl label {
-    line-height: 24px;
+    /* line-height: 24px; */
   }
 
+  .mgl-layerControl .checkbox {
+    margin: 6px 4px;
+  }
   /*https://codepen.io/takeradi/pen/rjJpKK*/
 
   /* .checkbox input[type="checkbox"] {
@@ -198,34 +201,31 @@ INPUT SLIDERS
 ****/
 
 input.slide-toggle {
-  vertical-align: top;
-  margin-top: 1px;
+  margin: 0 6px 0 0;
   cursor: pointer;
-  border: solid thin #bcc3ce;
+  border: solid thin #ccc;
   position: relative;
   -webkit-appearance: none;
   outline: none;
   width: 26px;
-  height: 12px;
-  background-color: #e0e0e0;
+  height: 10px;
+  background-color: #eee;
   border-radius: 25px;
   transition: 0.2s;
   background-clip: padding-box;
-  vertical-align: middle;
 }
 
 input.slide-toggle:after {
   content: "";
   position: absolute;
-  top: 0px;
+  top: -2px;
   left: 0px;
   background: #fff;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  box-shadow: none;
+  box-shadow: 0 0 1px 2px #ccc;
   transition: 0.2s;
-  border: solid thin #fff;
 }
 
 input.slide-toggle:focus {
@@ -245,5 +245,6 @@ input.slide-toggle:checked {
 
 input.slide-toggle:checked:after {
   left: 14px;
+  box-shadow: 0 0 1px 2px #0d84b3;
   /* border: solid thin #0d84b3; */
 }

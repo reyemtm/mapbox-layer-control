@@ -26,19 +26,22 @@
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 100%;
+      left: 300px;
+      width: calc(100% - 300px);
     }
-    /* #sidebar {
+    #sidebar {
       width: 300px;
       position: absolute;
       left: 0;
       height: 100%;
-    } */
+    }
   </style>
 </head>
 
 <body>
-
+  <div id="sidebar">
+    <h3 style="margin-left: 10px">Outside Map Example</h3>
+  </div>
   <div id='map'></div>
   <script>
 
@@ -212,7 +215,7 @@
 
       var config = {
         options: {
-          collapsed: true
+          collapsed: false
         },
         layers: [
           {
@@ -257,7 +260,10 @@
         ]
       }
 
-      mglMap.addControl(new layerControlGrouped(config), "top-left");
+      var sidebar = document.getElementById("sidebar")
+      var control = new layerControlGrouped(config);
+      sidebar.appendChild(control.onAdd(mglMap))
+      // mglMap.addControl(new layerControlGrouped(config), "top-left");
 
     });
 

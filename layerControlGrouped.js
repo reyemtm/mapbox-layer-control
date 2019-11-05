@@ -135,21 +135,24 @@ class layerControlGrouped {
     /****
      * ADD EVENT LISTENERS FOR THE LAYER CONTROL ALL ON THE CONTROL ITSELF
      ****/
-    // this._div.addEventListener("mouseenter", function (e) {
-    //   e.target.classList.remove("collapsed")
-    //   return
-    // });
+    this._div.addEventListener("mouseenter", function (e) {
+      setTimeout(function() {
+        e.target.classList.remove("collapsed")
+      }, 0)
+      return
+    });
 
-    // this._div.addEventListener("mouseout", function (e) {
-    //   e.target.classList.add("collapsed")
-    //   return
-    // });
+    this._div.addEventListener("mouseleave", function (e) {
+      e.target.classList.add("collapsed")
+      return
+    });
 
     this._div.addEventListener("click", function (e) {
-      console.log(e.target);
+      console.log(e.target);     
 
-      if (e.target.className === "mgl-layerControlCover") {
-        e.target.parentElement.classList.remove("collapsed")
+      if (e.target.dataset.layerControl) {
+        console.log(true)
+        e.target.classList.remove("collapsed");
         return
       }
 
@@ -362,13 +365,9 @@ function lcCreateGroup(group, layers, map) {
 function lcCreateButton(collapsed) {
   let div = document.createElement('div');
   div["aria-label"] = "Layer Control";
+  div.dataset.layerControl = "true"
   div.className = 'mapboxgl-ctrl mapboxgl-ctrl-group mgl-layerControl';
   if (collapsed) div.classList.add("collapsed");
-  
-  let cover = document.createElement("img");
-  cover.src="https://icongr.am/material/layers.svg";
-  cover.classList = "mgl-layerControlCover";
-  div.appendChild(cover);
   
   return div
 }
@@ -413,7 +412,6 @@ function lcSetActiveLayers(l,checked) {
 }
 
 function lcSetLegendVisibility(e) {
-  console.log(e.parentElement.scrollHeight)
   let _legend = e.parentElement.querySelectorAll(".mgl-layerControlLegend");
   let _display = (!e.checked) ? "none" : "block";
   for (let i = 0; i < _legend.length; i++) {

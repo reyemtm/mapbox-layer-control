@@ -44,35 +44,26 @@
     width: 36px;
     height: 36px;
     overflow: hidden;
+    background-image: url("https://icongr.am/material/layers.svg");
+    background-size: cover;
+    background-position: center;
   }
+
   .mgl-layerControl.collapsed > div {
     display: none;
   }
 
-  .mgl-layerControl.collapsed:hover > div {
-    display: block;
-  }
-
-  .mgl-layerControlCover {
-    width: 100%;
-    height: 100%;
-  }
-
-  .mgl-layerControl:not(.collapsed) > img,
-  .mgl-layerControl.collapsed:hover > img {
+  .mgl-layerControl:not(.collapsed) > img {
     display: none;
   }
 
-  .mgl-layerControl:not(.collapsed),
-  .mgl-layerControl.collapsed:hover {
+  .mgl-layerControl:not(.collapsed) {
     height: auto;
     width:  calc(100% + 20px);
     overflow-x: hidden;
     display: block;
     overflow-y: auto;
   }
-
-
 
   /****
   ****/
@@ -87,12 +78,11 @@
     background-position: center center;
     background-color: transparent;
     background-repeat: no-repeat;
-    background-image: url('./minus.svg'); 
-  }
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' id='mdi-minus' width='32' height='32' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M19,13H5V11H19V13Z'/%3E%3C/svg%3E");  }
 
   .mgl-layerControl button.collapsed {
-    background-image: url('./plus.svg'); 
-  }
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' id='mdi-plus' width='32' height='32' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z'/%3E%3C/svg%3E");
+   }
 
   .mgl-layerControl icon {
     margin-right: 6px
@@ -124,10 +114,6 @@
   .mgl-layerControl .layer.side-toggle,
   .mgl-layerControl label {
     cursor: pointer;
-  }
-
-  .mgl-layerControl label {
-    /* line-height: 24px; */
   }
 
   .mgl-layerControl .checkbox {
@@ -233,18 +219,12 @@ input.slide-toggle:focus {
   box-shadow: 0 0 0 0.1rem rgba(13,132,179,.2);
 }
 
-/* input.slide-toggle:focus:after {
-  height: 8px;
-} */
-
 input.slide-toggle:checked {
   background: #0d84b3;
   border-color: #0d84b3;
-  /* border-color: #40608b; */
 }
 
 input.slide-toggle:checked:after {
   left: 14px;
   box-shadow: 0 0 1px 2px #0d84b3;
-  /* border: solid thin #0d84b3; */
 }

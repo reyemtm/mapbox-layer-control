@@ -188,7 +188,7 @@ class layerControlGrouped {
 
       if (e.target.dataset.layergroup) {
         console.log("layergroup")
-        let inputs = e.target.parentElement.querySelectorAll("[data-map-layer");
+        let inputs = e.target.parentElement.querySelectorAll("[data-map-layer]");
         // CHECK IF ANY OF THE BOXES ARE NOT CHECKED AND IF NOT THEM CHECK THEM ALL
         if (!domHelper.GetAllChecked(inputs)) {
           for (let i = 0; i < inputs.length; i++) {

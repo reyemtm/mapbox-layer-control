@@ -160,7 +160,6 @@ class layerControlGrouped {
       console.log(e.target);
 
       if (e.target.dataset.layerControl) {
-        console.log(true)
         e.target.classList.remove("collapsed");
         return
       }
@@ -239,10 +238,9 @@ class layerControlGrouped {
     //NEED TO SET THIS AT THE BEGINNING PASS IN CURRENT ZOOM OF MAP AND SET DISABLED PROPERTY THIS ALSO BINGS IN WEIRD THINGS WITH THE CHECK ALL GROUP BUT TACKLE THAT LATER
     this._map.on("zoomend", function () {
       let zoomendMap = this;
-      let lcLayers = document.querySelectorAll("[data-minzoom]");
+      let lcLayers = document.querySelectorAll("[data-master-layer]");
       lcLayers.forEach(function (l) {
-        console.log(l.dataset.minzoom)
-        if (l.dataset.minzoom > zoomendMap.getZoom()) {
+        if (l.dataset.minzoom && l.dataset.minzoom > zoomendMap.getZoom()) {
           l.parentElement.style.opacity = "0.3"
           l.disabled = true
         } else {
@@ -409,9 +407,7 @@ function lcCreateGroup(group, layers, map) {
 
   let titleInputLabel = document.createElement("label");
   titleInputLabel.setAttribute("for", titleInputId);
-  titleInputLabel.style.cursor = "pointer";
-  titleInputLabel.style.display = "inline-flex";
-  titleInputLabel.style.fontWeight = "600";
+  titleInputLabel.className = "mgl-layerControlGroupHeading"
   titleInputLabel.textContent = group;
 
   // let titleSettings = document.createElement("span");

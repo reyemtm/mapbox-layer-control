@@ -6,8 +6,8 @@
  * [ ] ADD ZOOM LEVEL VISIBILITY ON TOGGLES MAKE INACTIVE ON ZOOMEND ADD FUNCTION TO CHECK FOR VISIBILITY
  */
 
-import * as mglHelper  from "./lib/mglHelpers.js";
-import * as domHelper  from "./lib/domHelpers.js";
+import * as mglHelper from "./lib/mglHelpers.js";
+import * as domHelper from "./lib/domHelpers.js";
 
 
 class layerControlGrouped {
@@ -23,16 +23,16 @@ class layerControlGrouped {
 
     this._layers = options.layers.reverse().slice()
 
-    let directories = []; 
+    let directories = [];
     let groups = [];
 
-    directories = this._layers.reduce(function(i, layer) {
+    directories = this._layers.reduce(function (i, layer) {
       return [...i, layer.directory]
     }, []);
 
     this._directories = [...new Set(directories)];
 
-    groups = this._layers.reduce(function(i, layer) {
+    groups = this._layers.reduce(function (i, layer) {
       if (!layer.group) layer.group = "Operational Layers"
       return [...i, layer.group]
     }, []);
@@ -41,21 +41,20 @@ class layerControlGrouped {
 
     let config = {};
 
-    this._directories.map(function(d) {
-      options.layers.map(function(layer) {
+    this._directories.map(function (d) {
+      options.layers.map(function (layer) {
         if (layer.directory === d) {
-          config[layer.directory] = {
-          }
+          config[layer.directory] = {}
         }
       })
     })
 
-    this._layers.map(function(l) {
+    this._layers.map(function (l) {
       if (!l.group) l.group = "Operational Layers";
       config[l.directory][l.group] = []
     })
 
-    this._layers.map(function(l) {
+    this._layers.map(function (l) {
       config[l.directory][l.group].push(l)
     })
 
@@ -106,7 +105,17 @@ class layerControlGrouped {
 
       //CREATE DIRECTORY
       let directory = d;
-      let directoryDiv = lcCreateDicrectory(directory);
+
+      let layerCount = 0;
+
+      this._layers.map(l => {
+        if (l.directory === d && !l.parent) {
+          var checked = mglHelper.GetLayerVisibility(this._mapLayers, this._mapLayerIds, l.id);
+          if (checked) layerCount = layerCount + 1
+        }
+      })
+
+      let directoryDiv = lcCreateDicrectory(directory, layerCount);
 
       //CREATE TOGGLE GROUPS
       for (let g in this._layerControlConfig[d]) {
@@ -136,7 +145,7 @@ class layerControlGrouped {
      * ADD EVENT LISTENERS FOR THE LAYER CONTROL ALL ON THE CONTROL ITSELF
      ****/
     this._div.addEventListener("mouseenter", function (e) {
-      setTimeout(function() {
+      setTimeout(function () {
         e.target.classList.remove("collapsed")
       }, 0)
       return
@@ -148,7 +157,7 @@ class layerControlGrouped {
     });
 
     this._div.addEventListener("click", function (e) {
-      console.log(e.target);     
+      console.log(e.target);
 
       if (e.target.dataset.layerControl) {
         console.log(true)
@@ -196,7 +205,7 @@ class layerControlGrouped {
               inputs[i].click()
             }
           }
-        } 
+        }
         // IF ALL OF THE BOXES ARE CHECKED, UNCHECK THEM ALL
         else {
           for (let i = 0; i < inputs.length; i++) {
@@ -212,31 +221,31 @@ class layerControlGrouped {
       if (e.target.dataset.directoryToggle) {
         if (e.target.parentElement.children[2].style.display != "none") {
           e.target.parentElement.children[0].className = "collapsed"
-        }else{
+        } else {
           e.target.parentElement.children[0].className = ""
         }
         domHelper.ToggleChildren(e.target.parentElement, 2)
-        
+
         return
       }
     })
 
     if (this._collapsed) {
-      this._map.on("click", function() {
+      this._map.on("click", function () {
         _this._div.classList.add("collapsed")
       })
     }
 
     //NEED TO SET THIS AT THE BEGINNING PASS IN CURRENT ZOOM OF MAP AND SET DISABLED PROPERTY THIS ALSO BINGS IN WEIRD THINGS WITH THE CHECK ALL GROUP BUT TACKLE THAT LATER
-    this._map.on("zoomend", function() {
+    this._map.on("zoomend", function () {
       let zoomendMap = this;
       let lcLayers = document.querySelectorAll("[data-minzoom]");
-      lcLayers.forEach(function(l) {
+      lcLayers.forEach(function (l) {
         console.log(l.dataset.minzoom)
         if (l.dataset.minzoom > zoomendMap.getZoom()) {
           l.parentElement.style.opacity = "0.3"
           l.disabled = true
-        }else{
+        } else {
           l.parentElement.style.opacity = "1"
           l.disabled = false
         }
@@ -286,7 +295,7 @@ function lcCreateLayerToggle(layer, checked, index) {
   }
   if (layer.parent) {
     input.dataset.parent = layer.parent;
-  }else{
+  } else {
     input.dataset.masterLayer = true;
   }
 
@@ -294,11 +303,12 @@ function lcCreateLayerToggle(layer, checked, index) {
   input.dataset.mapLayer = true;
   if (checked) input.checked = true;
 
-  input.onclick = function() {
+  input.onclick = function () {
     lcSetActiveLayers(this.id, this.checked)
     lcSetLegendVisibility(this)
-  }
-  
+    lcSetDirectoryLayerCount(this);
+  };
+
   let label = document.createElement("label");
   label.setAttribute("for", layer.id);
   if (layer.legend) {
@@ -313,37 +323,62 @@ function lcCreateLayerToggle(layer, checked, index) {
   } else if (layer.simpleLegend) {
     label.innerHTML += layer.simpleLegend;
     label.innerHTML += (!layer.name) ? layer.id : layer.name;
-  }else{
+  } else {
     label.innerText = (!layer.name) ? layer.id : layer.name;
   }
   label.dataset.layerToggle = "true";
   div.appendChild(input);
   div.appendChild(label);
-  
+
   return div
 }
 
-function lcCreateDicrectory(directoryName) {
+function lcSetDirectoryLayerCount(e) {
+  let targetDirectory = e.closest(".mgl-layerControlDirectory")
+  let targetChildren = targetDirectory.querySelectorAll("[data-master-layer]");
+  let targetCount = 0;
+  targetChildren.forEach(function (c) {
+    if (c.checked) targetCount = targetCount + 1;
+  })
+  if (targetCount > 0) {
+    targetDirectory.children[1].children[0].innerHTML = targetCount;
+    targetDirectory.children[1].children[0].style.display = "block"
+  } else {
+    targetDirectory.children[1].children[0].style.display = "none"
+  }
+}
 
-    let accordian = document.createElement("div");
-    accordian.dataset.accordian = true;
-    accordian.style.backgroundColor = "white";
-    accordian.className = "mgl-layerControlDirectory";
-  
-    let button = document.createElement("button");
-    button.dataset.directoryToggle = true
- 
-    accordian.appendChild(button);
-  
-    let d = document.createElement("div");
-    d.className = "directory" 
-    d.id = directoryName.replace(" ", "");
-    d.innerText =  directoryName;
-    d.dataset.name = directoryName;
-    d.dataset.directoryToggle = true
+function lcCreateDicrectory(directoryName, layerCount) {
 
-    accordian.appendChild(d);
-    return accordian;
+  let accordian = document.createElement("div");
+  accordian.dataset.accordian = true;
+  accordian.style.backgroundColor = "white";
+  accordian.className = "mgl-layerControlDirectory";
+
+  let button = document.createElement("button");
+  button.dataset.directoryToggle = true
+
+  accordian.appendChild(button);
+
+  let d = document.createElement("div");
+  d.className = "directory"
+  d.id = directoryName.replace(" ", "");
+  d.innerText = directoryName;
+  d.dataset.name = directoryName;
+  d.dataset.directoryToggle = true
+
+  var counter = document.createElement("span");
+  counter.style.background = "#0d84b3";
+  counter.className = "mgl-layerControlDirectoryCounter";
+  counter.style.display = (layerCount === 0) ? "none" : "block";
+  counter.innerText = (!layerCount) ? "" : layerCount
+  counter.style.float = "right";
+  counter.style.color = "white";
+  counter.style.padding = "1px 4px";
+  d.appendChild(counter)
+
+  accordian.appendChild(d);
+  return accordian;
 }
 
 function lcCreateGroup(group, layers, map) {
@@ -399,7 +434,7 @@ function lcCreateButton(collapsed) {
   div.dataset.layerControl = "true"
   div.className = 'mapboxgl-ctrl mapboxgl-ctrl-group mgl-layerControl';
   if (collapsed) div.classList.add("collapsed");
-  
+
   return div
 }
 
@@ -423,7 +458,7 @@ function isString(value) {
   return typeof value === 'string' || value instanceof String;
 }
 
-function lcSetActiveLayers(l,checked) {
+function lcSetActiveLayers(l, checked) {
   let _layer = l;
   let _visibility = checked;
   let params = new URLSearchParams(window.location.search);
@@ -431,13 +466,17 @@ function lcSetActiveLayers(l,checked) {
     params.set(_layer, true);
     if (history.pushState) {
       let url = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + params.toString() + window.location.hash;
-      window.history.pushState({path:url},'',url);
+      window.history.pushState({
+        path: url
+      }, '', url);
     }
-  }else{
+  } else {
     params.delete(_layer);
     if (history.pushState) {
       let url = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + params.toString() + window.location.hash;
-      window.history.pushState({path:url},'',url);
+      window.history.pushState({
+        path: url
+      }, '', url);
     }
   }
 }

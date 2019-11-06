@@ -188,7 +188,7 @@ class layerControlGrouped {
 
       if (e.target.dataset.layergroup) {
         console.log("layergroup")
-        let inputs = e.target.parentElement.querySelectorAll("[data-map-layer]");
+        let inputs = e.target.parentElement.querySelectorAll("[data-master-layer]");
         // CHECK IF ANY OF THE BOXES ARE NOT CHECKED AND IF NOT THEM CHECK THEM ALL
         if (!domHelper.GetAllChecked(inputs)) {
           for (let i = 0; i < inputs.length; i++) {
@@ -261,11 +261,15 @@ function lcCreateLayerToggle(layer, checked, index) {
   input.dataset.group = (layer.group) ? layer.group : false;
 
   if (layer.children) {
-    input.dataset.children = true
+    input.dataset.children = true;
+    input.dataset.masterLayer = true;
   }
   if (layer.parent) {
-    input.dataset.parent = layer.parent
+    input.dataset.parent = layer.parent;
+  }else{
+    input.dataset.masterLayer = true;
   }
+
   input.className = "layer slide-toggle";
   input.dataset.mapLayer = true;
   if (checked) input.checked = true;
@@ -352,7 +356,7 @@ function lcCreateGroup(group, layers, map) {
   titleInputLabel.setAttribute("for", titleInputId);
   titleInputLabel.style.cursor = "pointer";
   titleInputLabel.style.display = "inline-flex";
-  titleInputLabel.style.fontWeight = "500";
+  titleInputLabel.style.fontWeight = "600";
   titleInputLabel.textContent = group;
 
   titleInputContainer.appendChild(titleInput);

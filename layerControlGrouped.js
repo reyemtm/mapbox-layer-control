@@ -227,6 +227,22 @@ class layerControlGrouped {
       })
     }
 
+    //NEED TO SET THIS AT THE BEGINNING PASS IN CURRENT ZOOM OF MAP AND SET DISABLED PROPERTY THIS ALSO BINGS IN WEIRD THINGS WITH THE CHECK ALL GROUP BUT TACKLE THAT LATER
+    this._map.on("zoomend", function() {
+      let zoomendMap = this;
+      let lcLayers = document.querySelectorAll("[data-minzoom]");
+      lcLayers.forEach(function(l) {
+        console.log(l.dataset.minzoom)
+        if (l.dataset.minzoom > zoomendMap.getZoom()) {
+          l.parentElement.style.opacity = "0.3"
+          l.disabled = true
+        }else{
+          l.parentElement.style.opacity = "1"
+          l.disabled = false
+        }
+      });
+    })
+
     return this._div;
   }
   onRemove(map) {
@@ -259,6 +275,10 @@ function lcCreateLayerToggle(layer, checked, index) {
   input.type = "checkbox"
   input.id = layer.id;
   input.dataset.group = (layer.group) ? layer.group : false;
+
+  if (layer.minzoom) {
+    input.dataset.minzoom = layer.minzoom
+  }
 
   if (layer.children) {
     input.dataset.children = true;
@@ -358,6 +378,13 @@ function lcCreateGroup(group, layers, map) {
   titleInputLabel.style.display = "inline-flex";
   titleInputLabel.style.fontWeight = "600";
   titleInputLabel.textContent = group;
+
+  // let titleSettings = document.createElement("span");
+  // titleSettings.style.position = "absolute";
+  // titleSettings.style.right = "5px";
+  // titleSettings.style.opacity = "0.8";
+  // titleSettings.innerHTML = "<img src='https://icongr.am/material/dots-vertical.svg' height='24px'></img>"
+  // titleInputLabel.appendChild(titleSettings);
 
   titleInputContainer.appendChild(titleInput);
   titleInputContainer.appendChild(titleInputLabel);

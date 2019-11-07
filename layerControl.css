@@ -68,7 +68,10 @@
 
   /****
   ****/
-
+  .mgl-layerControlLegend {
+    margin-right: 4px;
+    padding-right: 4px;
+  }
   .mgl-layerControlGroupHeading {
     font-weight: 600;
     font-size: 18px;
@@ -96,7 +99,7 @@
     margin-right: 6px
   }
 
-  .mgl-layerControlLegend {
+  .mgl-layerControlLegend:not(label) {
     margin-left: 20px;
     max-width: calc(100% - 32px);
     font-size: 14px;
@@ -113,7 +116,7 @@
   .mgl-layerControlDirectory > .directory {
     font-size: 18px;
     background: #f8f9fa;
-    padding: 8px;
+    padding: 5px;
     cursor: pointer;
   }
 

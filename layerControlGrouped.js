@@ -144,20 +144,22 @@ class layerControlGrouped {
     /****
      * ADD EVENT LISTENERS FOR THE LAYER CONTROL ALL ON THE CONTROL ITSELF
      ****/
-    this._div.addEventListener("mouseenter", function (e) {
-      setTimeout(function () {
-        e.target.classList.remove("collapsed")
-      }, 0)
-      return
-    });
-
-    this._div.addEventListener("mouseleave", function (e) {
-      e.target.classList.add("collapsed")
-      return
-    });
+    if (this._collapsed) {
+      this._div.addEventListener("mouseenter", function (e) {
+        setTimeout(function () {
+          e.target.classList.remove("collapsed")
+        }, 0)
+        return
+      });
+  
+      this._div.addEventListener("mouseleave", function (e) {
+        e.target.classList.add("collapsed")
+        return
+      });
+    }
 
     this._div.addEventListener("click", function (e) {
-      console.log(e.target);
+      // console.log(e.target);
 
       if (e.target.dataset.layerControl) {
         e.target.classList.remove("collapsed");
@@ -309,24 +311,26 @@ function lcCreateLayerToggle(layer, checked, index) {
 
   let label = document.createElement("label");
   label.setAttribute("for", layer.id);
+  let legend = document.createElement("div");
   if (layer.legend) {
     label.innerText = (!layer.name) ? layer.id : layer.name;
-    let legend = document.createElement("div");
-    legend.className = "mgl-layerControlLegend";
     legend.innerHTML = layer.legend;
+    legend.className = "mgl-layerControlLegend";
+    legend.dataset.layerChildLegend = "true"
     if (!checked) {
       legend.style.display = "none"
     }
-    label.appendChild(legend)
   } else if (layer.simpleLegend) {
     label.innerHTML += layer.simpleLegend;
     label.innerHTML += (!layer.name) ? layer.id : layer.name;
+    label.className = "mgl-layerControlLegend"
   } else {
     label.innerText = (!layer.name) ? layer.id : layer.name;
   }
   label.dataset.layerToggle = "true";
   div.appendChild(input);
   div.appendChild(label);
+  div.appendChild(legend)
 
   return div
 }
@@ -438,13 +442,13 @@ function lcCreateLegend(style) {
   let type = Object.keys(style)
   let legend = false;
   if (type.indexOf("line-color") > -1 && isString(style["line-color"])) {
-    legend = `<icon class='fa fa-minus ' style='color:${style["line-color"]};'></icon>`;
+    legend = `<icon class='fa fa-minus ' style='color:${style["line-color"]};margin-right:6px;'></icon>`;
   }
   if (type.indexOf("fill-color") > -1 && isString(style["fill-color"])) {
-    legend = `<icon class='fa fa-square' style='color:${style["fill-color"]};'></icon>`;
+    legend = `<icon class='fa fa-square' style='color:${style["fill-color"]};margin-right:6px;'></icon>`;
   }
   if (type.indexOf("circle-color") > -1 && isString(style["circle-color"])) {
-    legend = `<icon class='fa fa-circle ' style='color:${style["circle-color"]};'></icon>`;
+    legend = `<icon class='fa fa-circle ' style='color:${style["circle-color"]};margin-right:6px;'></icon>`;
   }
 
   return legend
@@ -478,7 +482,7 @@ function lcSetActiveLayers(l, checked) {
 }
 
 function lcSetLegendVisibility(e) {
-  let _legend = e.parentElement.querySelectorAll(".mgl-layerControlLegend");
+  let _legend = e.parentElement.querySelectorAll("[data-layer-child-legend]");
   let _display = (!e.checked) ? "none" : "block";
   for (let i = 0; i < _legend.length; i++) {
     _legend[i].style.display = _display

@@ -10,7 +10,8 @@ This is a simple layer control for Mapbox GL JS maps inspired by the Gartrell Gr
 
 Ideally one would add the operational layers to the map and the layers to this control with a master layer config JSON file. The control will also add url parameters for any layers turned on, allowing the map state to be shared. If this functionality is desired it is best to leave all layers off initially and let the control turn them on with query parameters, as this function will not turn off layers that are initially visible.
 
-**Legends use font-awesome.**
+~~Legends use font-awesome.~~
+Legends for grouped control now use simple HTML character codes.
 
 To Do:
 

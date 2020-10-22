@@ -10,6 +10,8 @@
 
 A simple filter control has been added, with one filter allowed per layer. Add a ``filterSchema`` to the layer metadata, where the first object is the name of the field to be filtered, and the type being the type of filter. Available types are string (==), date and select. 
 
+**The filter form uses Spectre CSS for styling.**
+
 ### String Filter
 
 ```JavaScript

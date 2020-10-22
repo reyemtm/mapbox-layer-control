@@ -62,7 +62,7 @@ class layerControlGrouped {
 
     //CREATE A LAYERS GROUP IN METADATA FOR FILTERING
     this._layers.forEach(function (l) {
-      
+      if (!l.name) l.name = l.id
       //ADD METADATA AND METADATA.LAYERS IF NOT EXIST
       if (!l.metadata) {
         l.metadata = {};
@@ -529,7 +529,7 @@ function lcSetLegendVisibility(e) {
 }
 
 function filterModal(map, layer) {
-  // console.log(layer)
+  console.log(layer)
   var id = layer.id + "FilterModal";
   if (!document.getElementById(id)) {
     var modal = document.createElement("div");

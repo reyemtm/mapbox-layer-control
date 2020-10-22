@@ -1,10 +1,59 @@
 # mapbox-layer-control
 
-#### [Grouped Demo](https://reyemtm.github.io/mapbox-layer-control/example/grouped.html) experimental
+#### [Grouped Demo](https://reyemtm.github.io/mapbox-layer-control/example/grouped.html)
 
 #### [Simple Demo](https://reyemtm.github.io/mapbox-layer-control/example/simple.html)
 
 *This is very much in development and may change without notice.*
+
+*Update 10/22/2020*
+
+A simple filter control has been added, with one filter allowed per layer. Add a ``filterSchema`` to the layer metadata, where the first object is the name of the field to be filtered, and the type being the type of filter. Available types are string (==), date and select. 
+
+### String Filter
+
+```JavaScript
+{
+  id: "States",
+  hidden: false,
+  group: "Political",
+  directory: "Admin",
+  metadata: {
+    filterSchema: {
+      "NAME": {
+      type: "string"
+      }
+    }
+  }
+}
+```
+
+### Date Filter
+**Must include the operator object**
+```
+"filterSchema": {
+  "last_major_work_date": {
+    "type": "date"
+  },
+  "operator": {
+    "type": "select",
+    "options": [">", ">=", "<", "<="]
+  }
+}
+```
+
+### Select Filter
+
+```
+"filterSchema": {
+  "zoning_code": {
+    "type": "select",
+    "options": ["", "RS-1","RS-2","RS-3","PUD"]  
+  }
+}
+```
+
+
 
 This is a simple layer control for Mapbox GL JS maps inspired by the Gartrell Group legend control. The layers need to already exist in the map. Each layer should only be added once to the control. The control does not control map layer indexing. The layers should be added to the control in the same order that they have been added to the map (meaning the top layer is added last). The control simply adjusts the visibility layout property of the layer. In the grouped control, the group name toggles all the layers in the group. The control can have hidden layers that get toggled just like other layers. Layers have legends added automatically if they are a line, circle or fill with a single color. They can also have legend written in HTML.
 

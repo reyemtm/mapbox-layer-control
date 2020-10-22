@@ -8,7 +8,7 @@
 
 *Update 10/22/2020*
 
-A simple filter control has been added, with one filter allowed per layer. Add a ``filterSchema`` to the layer metadata, where the first object is the name of the field to be filtered, and the type being the type of filter. Available types are string (==), date and select. 
+A simple filter control has been added, with one filter allowed per layer. Add a ``filterSchema`` to the layer metadata, where the first object is the name of the field to be filtered, and the type being the type of filter. Available types are string (==), date, number and select (single). 
 
 **The filter form uses Spectre CSS for styling.**
 
@@ -31,15 +31,11 @@ A simple filter control has been added, with one filter allowed per layer. Add a
 ```
 
 ### Date Filter
-**Must include the operator object**
+*Date and number filters have operators added automatically.*
 ```
 "filterSchema": {
   "last_major_work_date": {
     "type": "date"
-  },
-  "operator": {
-    "type": "select",
-    "options": [">", ">=", "<", "<="]
   }
 }
 ```

@@ -542,7 +542,7 @@ function filterModal(map, layer) {
       <div class="modal-header">
         <a href="#close" class="btn btn-clear float-right modal-close" aria-label="Close"></a>
         <div class="modal-title h4">
-          <p>Filter ${layer.name}</p>
+          <span>Filter ${layer.name}</span>
         </div>
       </div>
       <div class="modal-body">
@@ -554,6 +554,7 @@ function filterModal(map, layer) {
     var form = document.createElement("form");
     form.innerHTML = `
       ${createFormFields(layer.metadata.filterSchema)}
+      <br>
       <button type="submit" class="btn btn-primary">Submit</button>
       <button class="btn btn-outline" type="reset" style="float:right">Reset</button>
     `
@@ -561,7 +562,7 @@ function filterModal(map, layer) {
       e.preventDefault();
       window.location.hash = "#";
       var filter = buildFilter(new FormData(form), layer);
-      // console.log(filter)
+      console.log(filter)
       if (!filter) {
         layer.metadata.layers.map(l => {
           map.setFilter(l)
@@ -574,7 +575,9 @@ function filterModal(map, layer) {
     });
 
     form.addEventListener("reset", function(e) {
-      map.setFilter(layer.id)
+      layer.metadata.layers.map(l => {
+        map.setFilter(l)
+      })
     })
 
     modal.querySelector(".modal-body").appendChild(form)
@@ -591,17 +594,24 @@ function buildFilter(data, layer) {
 
   // console.log(fields[0], values[0])
 
-  var filter;
+  var filter = [];
 
-  //DATES AND INTEGERS MUST HAVE AN OPERATOR OPTION AS THE SECOND VALUE IN THE FORM
-  switch (layer.metadata.filterSchema[fields[0]].type) {
-    case "date" : filter = [values[1], ["get", fields[0] ], values[0] ]; break;
-    default: filter = ["==", ["get", fields[0]], values[0]]
+  for (var i = 0; i < fields.length; i++) {
+    if (fields[i].includes("operator")) continue;
+    if (!values[i]) continue;
+    //DATES AND INTEGERS MUST HAVE AN OPERATOR OPTION AS THE SECOND VALUE IN THE FORM
+    switch (layer.metadata.filterSchema[fields[i]].type) {
+      case "date" : filter.push([values[i + 1], ["get", fields[i] ], values[i] ]); break;
+      case "number" : filter.push([values[i + 1], ["get", fields[i] ], Number(values[i]) ]); break;
+      default: filter.push(["==", ["get", fields[i]], values[i]]);
+    }    
   }
 
-  if (!values[0]) filter = null;
-
-  return filter
+  if (filter.length < 1) {
+    return null
+  }else{
+    return ["all", ...filter]
+  }
 }
 
 function createFormFields(schema) {
@@ -623,6 +633,20 @@ function createFormFields(schema) {
       ${(!schema[s].hint) ? "" : `<p class="form-input-hint">${schema[s].hint}</p>`}
     </div>
     `
+
+    if (schema[s].type === "date" || schema[s].type === "number") html += `
+      <div class="form-group">
+        <label  class="form-label" for="${s}_operator">${s.toUpperCase()} OPERATOR</label>
+        <select id="${s}_operator"  name="${s}_operator" class="form-select">
+          <option>></option>
+          <option>>=</option>
+          <option>==</option>
+          <option><=</option>
+          <option><</option>
+        </select>
+      </div>
+    `
+
   }
   return html
 }

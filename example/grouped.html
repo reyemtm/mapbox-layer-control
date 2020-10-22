@@ -254,7 +254,15 @@
             hidden: false,
             group: "Hydro",
             children: true,
-            directory: "Environment"
+            directory: "Environment",
+            metadata: {
+              filterSchema: {
+                "name": {
+                  type: "select",
+                  options: ["", "Colorado"]
+                }
+              }
+            }
           },
           {
             id: "Rail",

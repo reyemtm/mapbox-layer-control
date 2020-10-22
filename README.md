@@ -1,6 +1,6 @@
 # mapbox-layer-control
 
-#### [Grouped Demo](https://reyemtm.github.io/mapbox-layer-control/example/grouped.html)
+#### [Grouped Demo](https://reyemtm.github.io/mapbox-layer-control/example/grouped.html?rivers=true&riversCase=true&States=true&Counties=true#4.11/38.61/-96.05)
 
 #### [Simple Demo](https://reyemtm.github.io/mapbox-layer-control/example/simple.html)
 

@@ -49,13 +49,32 @@ class layerControlGrouped {
       })
     })
 
-    this._layers.map(function (l) {
+    this._layers.forEach(function (l) {
       if (!l.group) l.group = "Operational Layers";
       config[l.directory][l.group] = []
     })
 
-    this._layers.map(function (l) {
+    this._layers.forEach(function (l) {
       config[l.directory][l.group].push(l)
+    });
+
+    let layersClone = this._layers.slice();
+
+    //CREATE A LAYERS GROUP IN METADATA FOR FILTERING
+    this._layers.forEach(function (l) {
+      
+      //ADD METADATA AND METADATA.LAYERS IF NOT EXIST
+      if (!l.metadata) {
+        l.metadata = {};
+      }
+      if (!l.metadata.layers) l.metadata.layers = [l.id];
+
+      //ADD CHILD LAYERS IF ANY
+      if (l.children) {
+        layersClone.forEach(child => {
+          if (child.parent && child.parent === l.id) l.metadata.layers = [...l.metadata.layers, child.id]
+        })
+      }
     })
 
     this._layerControlConfig = config
@@ -88,7 +107,7 @@ class layerControlGrouped {
   onAdd(map) {
 
     this._map = map;
-    let _this = this; //might use this later
+    let _this = this;
 
     // SETUP MAIN MAPBOX CONTROL
     this._div = lcCreateButton(this._collapsed);
@@ -132,7 +151,7 @@ class layerControlGrouped {
             layer.simpleLegend = lcCreateLegend(style)
           }
           let checked = mglHelper.GetLayerVisibility(this._mapLayers, this._mapLayerIds, layer.id);
-          let layerSelector = lcCreateLayerToggle(layer, checked);
+          let layerSelector = lcCreateLayerToggle(this._map, layer, checked);
           groupDiv.appendChild(layerSelector)
         }
         directoryDiv.appendChild(groupDiv);
@@ -197,7 +216,7 @@ class layerControlGrouped {
       }
 
       if (e.target.dataset.layergroup) {
-        console.log("layergroup")
+        // console.log("layergroup")
         let inputs = e.target.parentElement.querySelectorAll("[data-master-layer]");
         // CHECK IF ANY OF THE BOXES ARE NOT CHECKED AND IF NOT THEM CHECK THEM ALL
         if (!domHelper.GetAllChecked(inputs)) {
@@ -269,7 +288,7 @@ export {
  * HELPER FUNCTIONS
  ****/
 
-function lcCreateLayerToggle(layer, checked, index) {
+function lcCreateLayerToggle(map, layer, checked, index) {
   let div = document.createElement("div");
   div.className = "checkbox";
   div.title = "Map Layer";
@@ -328,9 +347,29 @@ function lcCreateLayerToggle(layer, checked, index) {
     label.innerText = (!layer.name) ? layer.id : layer.name;
   }
   label.dataset.layerToggle = "true";
+
   div.appendChild(input);
   div.appendChild(label);
-  div.appendChild(legend)
+
+  if (layer.metadata && layer.metadata.filterSchema) {
+    let filterSpan = document.createElement("span");
+    filterSpan.style.float = "right";
+    filterSpan.style.height = "20px";
+    filterSpan.style.opacity = 0.5;
+    filterSpan.innerHTML = filterIcon();
+    filterSpan.onclick = function() {
+      filterModal(map, layer)
+    }
+    filterSpan.onmouseenter = function() {
+      this.style.opacity = 1;
+    }
+    filterSpan.onmouseleave= function() {
+      this.style.opacity = 0.5;
+    }
+    div.appendChild(filterSpan)
+  }
+
+  div.appendChild(legend);
 
   return div
 }
@@ -442,13 +481,13 @@ function lcCreateLegend(style) {
   let type = Object.keys(style)
   let legend = false;
   if (type.indexOf("line-color") > -1 && isString(style["line-color"])) {
-    legend = `<span style="color:${style["line-color"]}">&#x25AC; </span>` //<icon class='fa fa-minus ' style='color:${style["line-color"]};margin-right:6px;'></icon>`;
+    legend = `<icon class='fa fa-minus' style='color:${style["line-color"]};margin-right:6px;'></icon>`;
   }
   if (type.indexOf("fill-color") > -1 && isString(style["fill-color"])) {
-    legend = `<span style="color:${style["fill-color"]}">&#x25A0; </span>`//<icon class='fa fa-square' style='color:${style["fill-color"]};margin-right:6px;'></icon>`;
+    legend = `<icon class='fa fa-square' style='color:${style["fill-color"]};margin-right:6px;'></icon>`;
   }
   if (type.indexOf("circle-color") > -1 && isString(style["circle-color"])) {
-    legend = `<span style="color:${style["circle-color"]}">&#11044; </span>` //`<icon class='fa fa-circle ' style='color:${style["circle-color"]};margin-right:6px;'></icon>`;
+    legend = `<icon class='fa fa-circle' style='color:${style["circle-color"]};margin-right:6px;'></icon>`;
   }
 
   return legend
@@ -464,17 +503,17 @@ function lcSetActiveLayers(l, checked) {
   let params = new URLSearchParams(window.location.search);
   if (_visibility) {
     params.set(_layer, true);
-    if (history.pushState) {
+    if (history.replaceState) {
       let url = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + params.toString() + window.location.hash;
-      window.history.pushState({
+      window.history.replaceState({
         path: url
       }, '', url);
     }
   } else {
     params.delete(_layer);
-    if (history.pushState) {
+    if (history.replaceState) {
       let url = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + params.toString() + window.location.hash;
-      window.history.pushState({
+      window.history.replaceState({
         path: url
       }, '', url);
     }
@@ -487,4 +526,108 @@ function lcSetLegendVisibility(e) {
   for (let i = 0; i < _legend.length; i++) {
     _legend[i].style.display = _display
   }
+}
+
+function filterModal(map, layer) {
+  // console.log(layer)
+  var id = layer.id + "FilterModal";
+  if (!document.getElementById(id)) {
+    var modal = document.createElement("div");
+    modal.id = id;
+    modal.classList = "modal"
+    modal.style.alignItems = "flex-start";
+    modal.innerHTML = `
+    <a href="#close" class="modal-overlay" aria-label="Close" style="opacity: 0.8"></a>
+    <div class="modal-container" style="width: 400px;">
+      <div class="modal-header">
+        <a href="#close" class="btn btn-clear float-right modal-close" aria-label="Close"></a>
+        <div class="modal-title h4">
+          <p>Filter ${layer.name}</p>
+        </div>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>`
+
+    var form = document.createElement("form");
+    form.innerHTML = `
+      ${createFormFields(layer.metadata.filterSchema)}
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <button class="btn btn-outline" type="reset" style="float:right">Reset</button>
+    `
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      window.location.hash = "#";
+      var filter = buildFilter(new FormData(form), layer);
+      // console.log(filter)
+      if (!filter) {
+        layer.metadata.layers.map(l => {
+          map.setFilter(l)
+        })
+      }else{
+        layer.metadata.layers.map(l => {
+          map.setFilter(l, filter)
+        })
+      }
+    });
+
+    form.addEventListener("reset", function(e) {
+      map.setFilter(layer.id)
+    })
+
+    modal.querySelector(".modal-body").appendChild(form)
+    document.body.appendChild(modal);
+    window.location.hash = id
+  }else{
+    window.location.hash = id
+  }
+}
+
+function buildFilter(data, layer) {
+  const fields = [...data.keys()];
+  const values = [...data.values()];
+
+  // console.log(fields[0], values[0])
+
+  var filter;
+
+  //DATES AND INTEGERS MUST HAVE AN OPERATOR OPTION AS THE SECOND VALUE IN THE FORM
+  switch (layer.metadata.filterSchema[fields[0]].type) {
+    case "date" : filter = [values[1], ["get", fields[0] ], values[0] ]; break;
+    default: filter = ["==", ["get", fields[0]], values[0]]
+  }
+
+  if (!values[0]) filter = null;
+
+  return filter
+}
+
+function createFormFields(schema) {
+  let html = "";
+  for (let s in schema) {
+    html += `
+    <div class="form-group">
+      <label class="form-label" for="${s}">${s.replace(/_/g, " ").toUpperCase()}</label>
+      ${(!schema[s].options) 
+          ?
+        `<input class="form-input" id="${s}" type="${schema[s].type}" name="${s}"  ${(!schema[s].readonly) ? '' : 'readonly="true"'} ${(!schema[s].required) ? '' : 'required="true"'}>`
+          :
+        `<select id="${s}" class="form-select" name="${s}" ${(!schema[s].required) ? '' : 'required="true"'}>
+          ${schema[s].options.map(o => {
+            return `<option>${o}</option>`
+          })}
+         </select>`
+      }
+      ${(!schema[s].hint) ? "" : `<p class="form-input-hint">${schema[s].hint}</p>`}
+    </div>
+    `
+  }
+  return html
+}
+
+
+function filterIcon() {
+  return `<svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24"><g><path d="M0,0h24 M24,24H0" fill="none"/><path d="M4.25,5.61C6.27,8.2,10,13,10,13v6c0,0.55,0.45,1,1,1h2c0.55,0,1-0.45,1-1v-6c0,0,3.72-4.8,5.74-7.39 C20.25,4.95,19.78,4,18.95,4H5.04C4.21,4,3.74,4.95,4.25,5.61z"/><path d="M0,0h24v24H0V0z" fill="none"/></g></svg>`
 }

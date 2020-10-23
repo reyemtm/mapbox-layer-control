@@ -617,9 +617,10 @@ function buildFilter(data, layer) {
 function createFormFields(schema) {
   let html = "";
   for (let s in schema) {
+    let name = s.replace(/_/g, " ").toUpperCase()
     html += `
     <div class="form-group">
-      <label class="form-label" for="${s}">${s.replace(/_/g, " ").toUpperCase()}</label>
+      <label class="form-label" for="${s}">${name}</label>
       ${(!schema[s].options) 
           ?
         `<input class="form-input" id="${s}" type="${schema[s].type}" name="${s}"  ${(!schema[s].readonly) ? '' : 'readonly="true"'} ${(!schema[s].required) ? '' : 'required="true"'}>`
@@ -636,7 +637,7 @@ function createFormFields(schema) {
 
     if (schema[s].type === "date" || schema[s].type === "number") html += `
       <div class="form-group">
-        <label  class="form-label" for="${s}_operator">${s.toUpperCase()} OPERATOR</label>
+        <label  class="form-label" for="${s}_operator">${name} OPERATOR</label>
         <select id="${s}_operator"  name="${s}_operator" class="form-select">
           <option>></option>
           <option>>=</option>

@@ -355,7 +355,7 @@ function lcCreateLayerToggle(map, layer, checked, index) {
     let filterSpan = document.createElement("span");
     filterSpan.style.float = "right";
     filterSpan.style.height = "20px";
-    filterSpan.style.opacity = 0.5;
+    filterSpan.style.opacity = 0.3;
     filterSpan.innerHTML = filterIcon();
     filterSpan.onclick = function() {
       filterModal(map, layer)
@@ -364,7 +364,7 @@ function lcCreateLayerToggle(map, layer, checked, index) {
       this.style.opacity = 1;
     }
     filterSpan.onmouseleave= function() {
-      this.style.opacity = 0.5;
+      this.style.opacity = 0.3;
     }
     div.appendChild(filterSpan)
   }

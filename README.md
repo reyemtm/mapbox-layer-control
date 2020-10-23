@@ -38,9 +38,11 @@ A simple filter control has been added, with multiple filters allowed per layer.
 ```JavaScript
 {
   id: "Roads",
-  "filterSchema": {
-    "last_major_work_date": {
-      "type": "date"
+  metadata: {
+    filterSchema: {
+      last_major_work_date: {
+        type: "date"
+      }
     }
   }
 }
@@ -50,11 +52,13 @@ A simple filter control has been added, with multiple filters allowed per layer.
 
 ```JavaScript
 {
-  "id": "Zoning",
-  "filterSchema": {
-    "zoning_code": {
-      "type": "select",
-      "options": ["", "RS-1","RS-2","RS-3","PUD"]  
+  id: "Zoning",
+  metadata: {
+    filterSchema: {
+      zoning_code: {
+        type: "select",
+        options: ["", "RS-1","RS-2","RS-3","PUD"]  
+      }
     }
   }
 }

@@ -36,9 +36,12 @@ A simple filter control has been added, with multiple filters allowed per layer.
 ### Date Filter
 *Date and number filters have operators added automatically.*
 ```JavaScript
-"filterSchema": {
-  "last_major_work_date": {
-    "type": "date"
+{
+  id: "Roads",
+  "filterSchema": {
+    "last_major_work_date": {
+      "type": "date"
+    }
   }
 }
 ```
@@ -46,10 +49,13 @@ A simple filter control has been added, with multiple filters allowed per layer.
 ### Select Filter
 
 ```JavaScript
-"filterSchema": {
-  "zoning_code": {
-    "type": "select",
-    "options": ["", "RS-1","RS-2","RS-3","PUD"]  
+{
+  "id": "Zoning",
+  "filterSchema": {
+    "zoning_code": {
+      "type": "select",
+      "options": ["", "RS-1","RS-2","RS-3","PUD"]  
+    }
   }
 }
 ```

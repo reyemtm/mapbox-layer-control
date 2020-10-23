@@ -26,7 +26,7 @@ A simple filter control has been added, with multiple filters allowed per layer.
   metadata: {
     filterSchema: {
       "NAME": {
-      type: "string"
+        type: "string"
       }
     }
   }

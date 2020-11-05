@@ -17,7 +17,7 @@ class layerControlGrouped {
 
     this._collapsed = false;
 
-    if (options.options && options.options.collapsed) {
+    if ((options.options && options.options.collapsed) || (options && options.collapsed)) {
       this._collapsed = true;
     }
 
@@ -582,8 +582,10 @@ function filterModal(map, layer) {
 
     modal.querySelector(".modal-body").appendChild(form)
     document.body.appendChild(modal);
+    window.location.hash = "#"
     window.location.hash = id
   }else{
+    window.location.hash = "#"
     window.location.hash = id
   }
 }

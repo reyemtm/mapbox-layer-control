@@ -9,9 +9,10 @@
 
 *This is very much in development and may change without notice.*
 
-### version 0.0.7
+### version 0.0.8
 - Clarification that for the date filter to work the date field format has to be ``yyyy/MM/dd``.
 - ``layerControlSimple.js is being deprecated and will no longer be updated.
+- New date filter option of `epoch` converts the date filter to Epoch time.
 
 ### version 0.0.6
 
@@ -33,7 +34,8 @@
         type: "string"
       },
       "date_joined_formatted": {
-        type: "date"
+        type: "date",
+        epoch: false
       }
     }
   }

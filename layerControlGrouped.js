@@ -600,9 +600,13 @@ function buildFilter(data, layer) {
   for (var i = 0; i < fields.length; i++) {
     if (fields[i].includes("operator")) continue;
     if (!values[i]) continue;
-    let filterValue = values[i]
+    let filterValue = values[i];
+    if (layer.metadata.filterSchema[fields[i]].type === "date" && layer.metadata.filterSchema[fields[i]].epoch) {
+      filterValue = new Date(filterValue + "T00:00:00").getTime();
+      // console.log(filterValue, new Date(filterValue))
+    }
     switch (layer.metadata.filterSchema[fields[i]].type) {
-      case "date" : filter.push([values[i + 1], ["get", fields[i] ], filterValue ]); break;
+      case "date" : filter.push([values[i + 1], ["get", fields[i] ], filterValue]); break;
       case "number" : filter.push([values[i + 1], ["get", fields[i] ], Number(filterValue) ]); break;
       default: filter.push(["==", ["get", fields[i]], filterValue]);
     }    

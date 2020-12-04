@@ -9,13 +9,17 @@
 
 *This is very much in development and may change without notice.*
 
-*Update 10/22/2020*
+### version 0.0.7
+- Clarification that for the date filter to work the date field format has to be ``yyyy/MM/dd``.
+- ``layerControlSimple.js is being deprecated and will no longer be updated.
 
-A simple filter control has been added, with multiple filters allowed per layer. If multiple filters are used, all conditions must be met. Add a ``filterSchema`` to the layer metadata, where the first object is the name of the field to be filtered, and the type being the type of filter. Available types are string, date, number, and select (single). 
+### version 0.0.6
+
+- A simple filter control has been added, with multiple filters allowed per layer. If multiple filters are used, all conditions must be met. Add a ``filterSchema`` to the layer metadata, where the first object is the name of the field to be filtered, and the type being the type of filter. Available types are string, date, number, and select (single). 
 
 **The filter form uses Spectre CSS for styling.**
 
-### String Filter
+### String and Date Filter
 
 ```JavaScript
 {
@@ -27,20 +31,8 @@ A simple filter control has been added, with multiple filters allowed per layer.
     filterSchema: {
       "NAME": {
         type: "string"
-      }
-    }
-  }
-}
-```
-
-### Date Filter
-*Date and number filters have operators added automatically.*
-```JavaScript
-{
-  id: "Roads",
-  metadata: {
-    filterSchema: {
-      last_major_work_date: {
+      },
+      "date_joined_formatted": {
         type: "date"
       }
     }

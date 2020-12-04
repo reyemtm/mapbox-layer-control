@@ -1,6 +1,6 @@
 {
   "name": "mapbox-layer-control",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A simple Mapbox GL JS layer control.",
   "main": "layerControlGrouped.js",
   "directories": {
@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/reyemtm/mapbox-layer-control/issues"
   },
-  "homepage": "https://github.com/reyemtm/mapbox-layer-control#readme"
+  "homepage": "https://github.com/reyemtm/mapbox-layer-control#readme",
+  "devDependencies": {
+    "date-format": "^3.0.0"
+  }
 }

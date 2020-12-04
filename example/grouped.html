@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="../layerControl.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
     integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous" />
+  <script src='https://github.com/lukasmartinelli/mapbox-gl-inspect/releases/download/v1.3.1/mapbox-gl-inspect.js'></script>
+  <link href='https://github.com/lukasmartinelli/mapbox-gl-inspect/releases/download/v1.3.1/mapbox-gl-inspect.css' rel='stylesheet' />
   <style>
     * {
       font-family: -apple-system, BlinkMacSystemFont, Avenir, "Avenir Next",
@@ -48,7 +50,6 @@
     import { layerControlSimple } from "../layerControlSimple.js"
     import { layerControlGrouped } from "../layerControlGrouped.js"
 
-
     /*Blank Mapbox GL Map*/
 
     var mglMap = new mapboxgl.Map({
@@ -78,8 +79,7 @@
       debug: 1
     });
     mglMap.addControl(new mapboxgl.NavigationControl());
-    mglMap.addControl(new mapboxgl.FullscreenControl());
-
+    // Pass an initialized popup to Mapbox GL
     // document.getElementById("map").addEventListener("mousemove", function(e) {
     //   console.log(e.clientX, e.clientY)
     //   var width = window.innerWidth;
@@ -121,6 +121,22 @@
           'fill-color': 'lightgray',
           'fill-outline-color': 'white',
           'fill-opacity': 0.9
+        }
+      });
+
+      mglMap.addLayer({
+        'id': 'states-fill',
+        'type': 'fill',
+        'source': {
+          type: "geojson",
+          data: "states.geojson"
+        },
+        'layout': {
+          'visibility': 'none'
+        },
+        'paint': {
+          'fill-color': '#121212',
+          'fill-opacity': 0.3
         }
       });
 
@@ -220,14 +236,25 @@
             directory: "Admin"
           },
           {
+            id: "states-fill",
+            parent: "States",
+            hidden: true,
+            group: "Political",
+            directory: "Admin"
+          },
+          {
             id: "States",
             hidden: false,
+            children: true,
             group: "Political",
             directory: "Admin",
             metadata: {
               filterSchema: {
                 "NAME": {
-                type: "string"
+                  type: "string"
+                },
+                "date_joined_formatted": {
+                  type: "date"
                 }
               }
             }
@@ -274,9 +301,20 @@
       }
 
       mglMap.addControl(new layerControlGrouped(config), "top-left");
+      mglMap.addControl(new MapboxInspect({
+        showInspectButton: false,
+        showInspectMapPopup: false,
+        showMapPopup: true,
+        showMapPopupOnHover: false,
+        showInspectMapPopupOnHover: false,
+        popup: new mapboxgl.Popup({
+          closeButton: true,
+          closeOnClick: false
+        })
+      }));
 
     });
-
+    
     /*End Blank Map*/
 
   </script>

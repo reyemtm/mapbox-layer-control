@@ -9,7 +9,6 @@
 import * as mglHelper from "./lib/mglHelpers.js";
 import * as domHelper from "./lib/domHelpers.js";
 
-
 class layerControlGrouped {
 
   constructor(options) {
@@ -601,11 +600,11 @@ function buildFilter(data, layer) {
   for (var i = 0; i < fields.length; i++) {
     if (fields[i].includes("operator")) continue;
     if (!values[i]) continue;
-    //DATES AND INTEGERS MUST HAVE AN OPERATOR OPTION AS THE SECOND VALUE IN THE FORM
+    let filterValue = values[i]
     switch (layer.metadata.filterSchema[fields[i]].type) {
-      case "date" : filter.push([values[i + 1], ["get", fields[i] ], values[i] ]); break;
-      case "number" : filter.push([values[i + 1], ["get", fields[i] ], Number(values[i]) ]); break;
-      default: filter.push(["==", ["get", fields[i]], values[i]]);
+      case "date" : filter.push([values[i + 1], ["get", fields[i] ], filterValue ]); break;
+      case "number" : filter.push([values[i + 1], ["get", fields[i] ], Number(filterValue) ]); break;
+      default: filter.push(["==", ["get", fields[i]], filterValue]);
     }    
   }
 

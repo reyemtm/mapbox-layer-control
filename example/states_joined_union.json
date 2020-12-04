@@ -1,0 +1,502 @@
+[
+  {
+    "st_name": "Alabama",
+    "date_joined": "1819/12/14",
+    "joined_name": "Alabama Territory",
+    "st_name_ii": "Alabama",
+    "st_abbr": "AL",
+    "fips": "01",
+    "date_joined_formatted": "12/14/1819",
+    "date_entered": "1819/12/14"
+  },
+  {
+    "st_name": "Alaska",
+    "date_joined": "3-Jan-59",
+    "joined_name": "Territory of Alaska",
+    "st_name_ii": "Alaska",
+    "st_abbr": "AK",
+    "fips": "02",
+    "date_joined_formatted": "01/03/1959",
+    "date_entered": "1959/01/03"
+  },
+  {
+    "st_name": "Arizona",
+    "date_joined": "14-Feb-12",
+    "joined_name": "Arizona Territory",
+    "st_name_ii": "Arizona",
+    "st_abbr": "AZ",
+    "fips": "04",
+    "date_joined_formatted": "02/14/1912",
+    "date_entered": "2012/02/14"
+  },
+  {
+    "st_name": "Arkansas",
+    "date_joined": "June 15, 1836",
+    "joined_name": "Arkansas Territory",
+    "st_name_ii": "Arkansas",
+    "st_abbr": "AR",
+    "fips": "05",
+    "date_joined_formatted": "06/15/1836",
+    "date_entered": "1836/06/15"
+  },
+  {
+    "st_name": "California",
+    "date_joined": "September 9, 1850",
+    "joined_name": "Unorganized territory / Mexican Cession[g] (part)",
+    "st_name_ii": "California",
+    "st_abbr": "CA",
+    "fips": "06",
+    "date_joined_formatted": "09/09/1850",
+    "date_entered": "1850/09/09"
+  },
+  {
+    "st_name": "Colorado",
+    "date_joined": "August 1, 1876",
+    "joined_name": "Colorado Territory",
+    "st_name_ii": "Colorado",
+    "st_abbr": "CO",
+    "fips": "08",
+    "date_joined_formatted": "08/01/1876",
+    "date_entered": "1876/08/01"
+  },
+  {
+    "st_name": "Connecticut",
+    "date_joined": "January 9, 1788",
+    "joined_name": "Crown Colony of Connecticut",
+    "st_name_ii": "Connecticut",
+    "st_abbr": "CT",
+    "fips": "09",
+    "date_joined_formatted": "01/09/1788",
+    "date_entered": "1788/01/09"
+  },
+  {
+    "st_name": "Delaware",
+    "date_joined": "December 7, 1787",
+    "joined_name": "Colony of Delaware[b]",
+    "st_name_ii": "Delaware",
+    "st_abbr": "DE",
+    "fips": "10",
+    "date_joined_formatted": "12/07/1787",
+    "date_entered": "1787/12/07"
+  },
+  {
+    "st_name": "Florida",
+    "date_joined": "March 3, 1845",
+    "joined_name": "Florida Territory",
+    "st_name_ii": "Florida",
+    "st_abbr": "FL",
+    "fips": "12",
+    "date_joined_formatted": "03/03/1845",
+    "date_entered": "1845/03/03"
+  },
+  {
+    "st_name": "Georgia",
+    "date_joined": "January 2, 1788",
+    "joined_name": "Crown Colony of Georgia",
+    "st_name_ii": "Georgia",
+    "st_abbr": "GA",
+    "fips": "13",
+    "date_joined_formatted": "01/02/1788",
+    "date_entered": "1788/01/02"
+  },
+  {
+    "st_name": "Hawaii",
+    "date_joined": "21-Aug-59",
+    "joined_name": "Territory of Hawaii",
+    "st_name_ii": "Hawaii",
+    "st_abbr": "HI",
+    "fips": "15",
+    "date_joined_formatted": "08/21/1959",
+    "date_entered": "1959/08/21"
+  },
+  {
+    "st_name": "Idaho",
+    "date_joined": "July 3, 1890",
+    "joined_name": "Idaho Territory",
+    "st_name_ii": "Idaho",
+    "st_abbr": "ID",
+    "fips": "16",
+    "date_joined_formatted": "07/03/1890",
+    "date_entered": "1890/07/03"
+  },
+  {
+    "st_name": "Illinois",
+    "date_joined": "December 3, 1818",
+    "joined_name": "Illinois Territory (part)",
+    "st_name_ii": "Illinois",
+    "st_abbr": "IL",
+    "fips": "17",
+    "date_joined_formatted": "12/03/1818",
+    "date_entered": "1818/12/03"
+  },
+  {
+    "st_name": "Indiana",
+    "date_joined": "December 11, 1816",
+    "joined_name": "Indiana Territory",
+    "st_name_ii": "Indiana",
+    "st_abbr": "IN",
+    "fips": "18",
+    "date_joined_formatted": "12/11/1816",
+    "date_entered": "1816/12/11"
+  },
+  {
+    "st_name": "Iowa",
+    "date_joined": "December 28, 1846",
+    "joined_name": "Iowa Territory (part)",
+    "st_name_ii": "Iowa",
+    "st_abbr": "IA",
+    "fips": "19",
+    "date_joined_formatted": "12/28/1846",
+    "date_entered": "1846/12/28"
+  },
+  {
+    "st_name": "Kansas",
+    "date_joined": "January 29, 1861",
+    "joined_name": "Kansas Territory (part)",
+    "st_name_ii": "Kansas",
+    "st_abbr": "KS",
+    "fips": "20",
+    "date_joined_formatted": "01/29/1861",
+    "date_entered": "1861/01/29"
+  },
+  {
+    "st_name": "Kentucky",
+    "date_joined": "June 1, 1792",
+    "joined_name": "Virginia (nine counties in its District of Kentucky[d])",
+    "st_name_ii": "Kentucky",
+    "st_abbr": "KY",
+    "fips": "21",
+    "date_joined_formatted": "06/01/1792",
+    "date_entered": "1792/06/01"
+  },
+  {
+    "st_name": "Louisiana",
+    "date_joined": "April 30, 1812",
+    "joined_name": "Territory of Orleans",
+    "st_name_ii": "Louisiana",
+    "st_abbr": "LA",
+    "fips": "22",
+    "date_joined_formatted": "04/30/1812",
+    "date_entered": "1812/04/30"
+  },
+  {
+    "st_name": "Maine",
+    "date_joined": "March 15, 1820",
+    "joined_name": "Massachusetts (District of Maine[f])",
+    "st_name_ii": "Maine",
+    "st_abbr": "ME",
+    "fips": "23",
+    "date_joined_formatted": "03/15/1820",
+    "date_entered": "1820/03/15"
+  },
+  {
+    "st_name": "Maryland",
+    "date_joined": "April 28, 1788",
+    "joined_name": "Proprietary Province of Maryland",
+    "st_name_ii": "Maryland",
+    "st_abbr": "MD",
+    "fips": "24",
+    "date_joined_formatted": "04/28/1788",
+    "date_entered": "1788/04/28"
+  },
+  {
+    "st_name": "Massachusetts",
+    "date_joined": "February 6, 1788",
+    "joined_name": "Crown Colony of Massachusetts Bay",
+    "st_name_ii": "Massachusetts",
+    "st_abbr": "MA",
+    "fips": "25",
+    "date_joined_formatted": "02/06/1788",
+    "date_entered": "1788/02/06"
+  },
+  {
+    "st_name": "Michigan",
+    "date_joined": "January 26, 1837",
+    "joined_name": "Michigan Territory",
+    "st_name_ii": "Michigan",
+    "st_abbr": "MI",
+    "fips": "26",
+    "date_joined_formatted": "01/26/1837",
+    "date_entered": "1837/01/26"
+  },
+  {
+    "st_name": "Minnesota",
+    "date_joined": "May 11, 1858",
+    "joined_name": "Minnesota Territory (part)",
+    "st_name_ii": "Minnesota",
+    "st_abbr": "MN",
+    "fips": "27",
+    "date_joined_formatted": "05/11/1858",
+    "date_entered": "1858/05/11"
+  },
+  {
+    "st_name": "Mississippi",
+    "date_joined": "December 10, 1817",
+    "joined_name": "Mississippi Territory",
+    "st_name_ii": "Mississippi",
+    "st_abbr": "MS",
+    "fips": "28",
+    "date_joined_formatted": "12/10/1817",
+    "date_entered": "1817/12/10"
+  },
+  {
+    "st_name": "Missouri",
+    "date_joined": "August 10, 1821",
+    "joined_name": "Missouri Territory (part)",
+    "st_name_ii": "Missouri",
+    "st_abbr": "MO",
+    "fips": "29",
+    "date_joined_formatted": "08/10/1821",
+    "date_entered": "1821/08/10"
+  },
+  {
+    "st_name": "Montana",
+    "date_joined": "November 8, 1889",
+    "joined_name": "Montana Territory",
+    "st_name_ii": "Montana",
+    "st_abbr": "MT",
+    "fips": "30",
+    "date_joined_formatted": "11/08/1889",
+    "date_entered": "1889/11/08"
+  },
+  {
+    "st_name": "Nebraska",
+    "date_joined": "March 1, 1867",
+    "joined_name": "Nebraska Territory",
+    "st_name_ii": "Nebraska",
+    "st_abbr": "NE",
+    "fips": "31",
+    "date_joined_formatted": "03/01/1867",
+    "date_entered": "1867/03/01"
+  },
+  {
+    "st_name": "Nevada",
+    "date_joined": "October 31, 1864",
+    "joined_name": "Nevada Territory",
+    "st_name_ii": "Nevada",
+    "st_abbr": "NV",
+    "fips": "32",
+    "date_joined_formatted": "10/31/1864",
+    "date_entered": "1864/10/31"
+  },
+  {
+    "st_name": "NewHampshire",
+    "date_joined": "June 21, 1788",
+    "joined_name": "Crown Colony of New Hampshire",
+    "st_name_ii": "New Hampshire",
+    "st_abbr": "NH",
+    "fips": "33",
+    "date_joined_formatted": "06/21/1788",
+    "date_entered": "1788/06/21"
+  },
+  {
+    "st_name": "NewJersey",
+    "date_joined": "December 18, 1787",
+    "joined_name": "Crown Colony of New Jersey",
+    "st_name_ii": "New Jersey",
+    "st_abbr": "NJ",
+    "fips": "34",
+    "date_joined_formatted": "12/18/1787",
+    "date_entered": "1787/12/18"
+  },
+  {
+    "st_name": "New Mexico",
+    "date_joined": "6-Jan-12",
+    "joined_name": "New Mexico Territory",
+    "st_name_ii": "New Mexico",
+    "st_abbr": "NM",
+    "fips": "35",
+    "date_joined_formatted": "01/06/1912",
+    "date_entered": "2012/01/06"
+  },
+  {
+    "st_name": "NewYork",
+    "date_joined": "July 26, 1788",
+    "joined_name": "Crown Colony of New York",
+    "st_name_ii": "New York",
+    "st_abbr": "NY",
+    "fips": "36",
+    "date_joined_formatted": "07/26/1788",
+    "date_entered": "1788/07/26"
+  },
+  {
+    "st_name": "NorthCarolina",
+    "date_joined": "November 21, 1789",
+    "joined_name": "Crown Colony of North Carolina",
+    "st_name_ii": "North Carolina",
+    "st_abbr": "NC",
+    "fips": "37",
+    "date_joined_formatted": "11/21/1789",
+    "date_entered": "1789/11/21"
+  },
+  {
+    "st_name": "NorthDakota",
+    "date_joined": "November 2, 1889",
+    "joined_name": "Dakota Territory (part)",
+    "st_name_ii": "North Dakota",
+    "st_abbr": "ND",
+    "fips": "38",
+    "date_joined_formatted": "11/02/1889",
+    "date_entered": "1889/11/02"
+  },
+  {
+    "st_name": "Ohio",
+    "date_joined": "March 1, 1803",
+    "joined_name": "Northwest Territory (part)",
+    "st_name_ii": "Ohio",
+    "st_abbr": "OH",
+    "fips": "39",
+    "date_joined_formatted": "03/01/1803",
+    "date_entered": "1803/03/01"
+  },
+  {
+    "st_name": "Oklahoma",
+    "date_joined": "November 16, 1907[44]",
+    "joined_name": "Oklahoma Territory and Indian Territory",
+    "st_name_ii": "Oklahoma",
+    "st_abbr": "OK",
+    "fips": "40",
+    "date_joined_formatted": "NaN/NaN/NaN",
+    "date_entered": "NaN/NaN/NaN"
+  },
+  {
+    "st_name": "Oregon",
+    "date_joined": "February 14, 1859",
+    "joined_name": "Oregon Territory (part)",
+    "st_name_ii": "Oregon",
+    "st_abbr": "OR",
+    "fips": "41",
+    "date_joined_formatted": "02/14/1859",
+    "date_entered": "1859/02/14"
+  },
+  {
+    "st_name": "Pennsylvania",
+    "date_joined": "December 12, 1787",
+    "joined_name": "Proprietary Province of Pennsylvania",
+    "st_name_ii": "Pennsylvania",
+    "st_abbr": "PA",
+    "fips": "42",
+    "date_joined_formatted": "12/12/1787",
+    "date_entered": "1787/12/12"
+  },
+  {
+    "st_name": "RhodeIsland",
+    "date_joined": "May 29, 1790",
+    "joined_name": "Crown Colony of Rhode Island and Providence Plantations",
+    "st_name_ii": "Rhode Island",
+    "st_abbr": "RI",
+    "fips": "44",
+    "date_joined_formatted": "05/29/1790",
+    "date_entered": "1790/05/29"
+  },
+  {
+    "st_name": "SouthCarolina",
+    "date_joined": "May 23, 1788",
+    "joined_name": "Crown Colony of South Carolina",
+    "st_name_ii": "South Carolina",
+    "st_abbr": "SC",
+    "fips": "45",
+    "date_joined_formatted": "05/23/1788",
+    "date_entered": "1788/05/23"
+  },
+  {
+    "st_name": "SouthDakota",
+    "date_joined": "November 2, 1889",
+    "joined_name": "Dakota Territory (part)",
+    "st_name_ii": "South Dakota",
+    "st_abbr": "SD",
+    "fips": "46",
+    "date_joined_formatted": "11/02/1889",
+    "date_entered": "1889/11/02"
+  },
+  {
+    "st_name": "Tennessee",
+    "date_joined": "June 1, 1796",
+    "joined_name": "Southwest Territory",
+    "st_name_ii": "Tennessee",
+    "st_abbr": "TN",
+    "fips": "47",
+    "date_joined_formatted": "06/01/1796",
+    "date_entered": "1796/06/01"
+  },
+  {
+    "st_name": "Texas",
+    "date_joined": "December 29, 1845",
+    "joined_name": "Republic of Texas",
+    "st_name_ii": "Texas",
+    "st_abbr": "TX",
+    "fips": "48",
+    "date_joined_formatted": "12/29/1845",
+    "date_entered": "1845/12/29"
+  },
+  {
+    "st_name": "Utah",
+    "date_joined": "January 4, 1896[43]",
+    "joined_name": "Utah Territory",
+    "st_name_ii": "Utah",
+    "st_abbr": "UT",
+    "fips": "49",
+    "date_joined_formatted": "NaN/NaN/NaN",
+    "date_entered": "NaN/NaN/NaN"
+  },
+  {
+    "st_name": "Vermont",
+    "date_joined": "March 4, 1791",
+    "joined_name": "Vermont Republic[c]",
+    "st_name_ii": "Vermont",
+    "st_abbr": "VT",
+    "fips": "50",
+    "date_joined_formatted": "03/04/1791",
+    "date_entered": "1791/03/04"
+  },
+  {
+    "st_name": "Virginia",
+    "date_joined": "June 25, 1788",
+    "joined_name": "Crown Colony and Dominion of Virginia",
+    "st_name_ii": "Virginia",
+    "st_abbr": "VA",
+    "fips": "51",
+    "date_joined_formatted": "06/25/1788",
+    "date_entered": "1788/06/25"
+  },
+  {
+    "st_name": "Washington",
+    "date_joined": "November 11, 1889",
+    "joined_name": "Washington Territory",
+    "st_name_ii": "Washington",
+    "st_abbr": "WA",
+    "fips": "53",
+    "date_joined_formatted": "11/11/1889",
+    "date_entered": "1889/11/11"
+  },
+  {
+    "st_name": "WestVirginia",
+    "date_joined": "June 20, 1863",
+    "joined_name": "Virginia (50 Trans-Allegheny region counties[h])",
+    "st_name_ii": "West Virginia",
+    "st_abbr": "WV",
+    "fips": "54",
+    "date_joined_formatted": "06/20/1863",
+    "date_entered": "1863/06/20"
+  },
+  {
+    "st_name": "Wisconsin",
+    "date_joined": "May 29, 1848",
+    "joined_name": "Wisconsin Territory (part)",
+    "st_name_ii": "Wisconsin",
+    "st_abbr": "WI",
+    "fips": "55",
+    "date_joined_formatted": "05/29/1848",
+    "date_entered": "1848/05/29"
+  },
+  {
+    "st_name": "Wyoming",
+    "date_joined": "July 10, 1890",
+    "joined_name": "Wyoming Territory",
+    "st_name_ii": "Wyoming",
+    "st_abbr": "WY",
+    "fips": "56",
+    "date_joined_formatted": "07/10/1890",
+    "date_entered": "1890/07/10"
+  }
+]

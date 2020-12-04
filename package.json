@@ -1,6 +1,6 @@
 {
   "name": "mapbox-layer-control",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A simple Mapbox GL JS layer control.",
   "main": "layerControlGrouped.js",
   "directories": {

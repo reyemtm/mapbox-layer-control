@@ -3,7 +3,7 @@
 
 ![](mgl-lc-grouped.gif)
 
-#### [Grouped Demo](https://reyemtm.github.io/mapbox-layer-control/example/grouped.html?rivers=true&riversCase=true&States=true&Counties=true#4.11/38.61/-96.05)
+#### [Grouped Demo](https://reyemtm.github.io/mapbox-layer-control/example/grouped.html?rivers=true&riversCase=true&States=true&states-fill=true&Counties=true#4.11/38.61/-96.05)
 
 #### [Simple Demo](https://reyemtm.github.io/mapbox-layer-control/example/simple.html)
 

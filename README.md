@@ -5,7 +5,7 @@
 
 #### [Grouped Demo](https://reyemtm.github.io/mapbox-layer-control/example/grouped.html?rivers=true&riversCase=true&States=true&states-fill=true#4.11/38.61/-96.05)
 
-#### [Sidebar Demo](https://reyemtm.github.io/mapbox-layer-control/example/grouped.html)
+#### [Sidebar Demo](https://reyemtm.github.io/mapbox-layer-control/example/sidebar.html)
 
 #### [Simple Demo](https://reyemtm.github.io/mapbox-layer-control/example/simple.html)
 

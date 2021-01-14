@@ -3,7 +3,7 @@
 
 <head>
   <meta charset='utf-8' />
-  <title>Mapbox Layer Control Example | Grouped</title>
+  <title>Mapbox Layer Control Example | Sidebar</title>
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mapbox-gl/1.4.0/mapbox-gl.js" integrity="sha256-4vgPjIfsjmay+xrYNgX79wO5pIHcSKoCWJKwNmoqcms=" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mapbox-gl/1.4.0/mapbox-gl.css" integrity="sha256-t2fYcalxXkJ++B2YwGcM5KYrF8Fu9vCcO69LI16Q5Y0=" crossorigin="anonymous" />
@@ -31,17 +31,26 @@
       bottom: 0;
       width: 100%;
     }
-    /* #sidebar {
+    .sidebar {
+      background-color: white;
+      box-shadow: 0 4px 4px 4px rgba(0,0,0,0.05);
       width: 300px;
       position: absolute;
       left: 0;
       height: 100%;
-    } */
+      z-index: 100;
+    }
+    h1 {
+      font-size: 1.2rem;
+      margin: 0.3rem;
+    }
   </style>
 </head>
 
 <body>
-
+  <div class="sidebar">
+    <h1>Layer Control in Sidebar</h1>
+  </div>
   <div id='map'></div>
   <script>
 
@@ -343,7 +352,8 @@
         ]
       }
 
-      mglMap.addControl(new layerControlGrouped(config), "top-left");
+      const layerControl = new layerControlGrouped(config);
+      document.querySelector('.sidebar').appendChild(layerControl.onAdd(mglMap));
       mglMap.addControl(new MapboxInspect({
         showInspectButton: false,
         showInspectMapPopup: false,

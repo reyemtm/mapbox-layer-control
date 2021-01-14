@@ -6,10 +6,10 @@
  * [ ] ADD ZOOM LEVEL VISIBILITY ON TOGGLES MAKE INACTIVE ON ZOOMEND ADD FUNCTION TO CHECK FOR VISIBILITY
  */
 
-import * as mglHelper from "./lib/mglHelpers.js";
 import * as domHelper from "./lib/domHelpers.js";
+import * as mglHelper from "./lib/mglHelpers.js";
 
-class layerControlGrouped {
+export class layerControlGrouped {
 
   constructor(options) {
     options = (!options) ? {} : options;
@@ -20,8 +20,15 @@ class layerControlGrouped {
       this._collapsed = true;
     }
 
-    this._layers = options.layers.reverse().slice()
+    if ((options.options && options.options.addLayers)) {
+      this._addLayers = true;
+    }
 
+    this._layers = options.layers.reverse().slice()
+    this._layerIds = this._layers.reduce((i,l) => {
+      return [...i, l.id]
+    }, [])
+    
     let directories = [];
     let groups = [];
 
@@ -40,8 +47,8 @@ class layerControlGrouped {
 
     let config = {};
 
-    this._directories.map(function (d) {
-      options.layers.map(function (layer) {
+    this._directories.forEach(function (d) {
+      options.layers.forEach(function (layer) {
         if (layer.directory === d) {
           config[layer.directory] = {}
         }
@@ -78,6 +85,12 @@ class layerControlGrouped {
 
     this._layerControlConfig = config
 
+    // this._layers.forEach(l => {
+    //   Object.keys(l).map(k => {
+    //     l.metadata[k] = l[k]
+    //   })
+    // })
+
     console.log(config)
 
     // TARGET CONFIG LAYOUT
@@ -107,16 +120,20 @@ class layerControlGrouped {
 
     this._map = map;
     let _this = this;
+    this._sources = []; //only add the lazyLoading source information to one layer
+
+    this._container = map.getContainer();
 
     // SETUP MAIN MAPBOX CONTROL
     this._div = lcCreateButton(this._collapsed);
 
     // GET THE MAP LAYERS AND LAYER IDS
-
     mglHelper.GetActiveLayers(this._map, this._layers)
 
     this._mapLayers = this._map.getStyle().layers;
     this._mapLayerIds = mglHelper.GetMapLayerIds(this._mapLayers);
+
+    // console.log(this._mapLayerIds, this._layers)
 
     //BUILD DIRECTORIES, GROUPS, LAYER TOGGLES AND LEGENDS FROM THE layerControlConfig
     for (let d in this._layerControlConfig) {
@@ -126,10 +143,12 @@ class layerControlGrouped {
 
       let layerCount = 0;
 
-      this._layers.map(l => {
+      this._layers.forEach(l => {
         if (l.directory === d && !l.parent) {
           var checked = mglHelper.GetLayerVisibility(this._mapLayers, this._mapLayerIds, l.id);
-          if (checked) layerCount = layerCount + 1
+          if (checked) {
+            layerCount = layerCount + 1
+          }
         }
       })
 
@@ -150,7 +169,8 @@ class layerControlGrouped {
             layer.simpleLegend = lcCreateLegend(style)
           }
           let checked = mglHelper.GetLayerVisibility(this._mapLayers, this._mapLayerIds, layer.id);
-          let layerSelector = lcCreateLayerToggle(this._map, layer, checked);
+          let { layerSelector, newSources } = lcCreateLayerToggle(this._map, layer, checked, this._sources);
+          this._sources = newSources;
           groupDiv.appendChild(layerSelector)
         }
         directoryDiv.appendChild(groupDiv);
@@ -186,6 +206,7 @@ class layerControlGrouped {
 
       if (e.target.className === "checkbox") {
         e.target.children[0].click();
+        // e.target.blur()
         return
       }
 
@@ -199,6 +220,7 @@ class layerControlGrouped {
             }
           }
         }
+      // e.target.blur()              
         return
       }
 
@@ -279,15 +301,11 @@ class layerControlGrouped {
   }
 }
 
-export {
-  layerControlGrouped
-}
-
 /****
  * HELPER FUNCTIONS
  ****/
 
-function lcCreateLayerToggle(map, layer, checked, index) {
+function lcCreateLayerToggle(map, layer, checked, sources) {
   let div = document.createElement("div");
   div.className = "checkbox";
   div.title = "Map Layer";
@@ -302,6 +320,18 @@ function lcCreateLayerToggle(map, layer, checked, index) {
   input.type = "checkbox"
   input.id = layer.id;
   input.dataset.group = (layer.group) ? layer.group : false;
+
+  if (layer.metadata.lazyLoading && layer.metadata.source && layer.metadata.source.id && layer.metadata.source.type && layer.metadata.source.data) {
+    //only add the source to one layer to avoid loading the same file simultaneously
+    if (!sources.includes(layer.metadata.source.id)) {
+      console.log("adding lazy loading info for", layer.id)
+      input.dataset.lazyLoading = true;
+      input.dataset.source = layer.metadata.source.id
+      input.dataset.sourceType = layer.metadata.source.type
+      input.dataset.sourceData = layer.metadata.source.data
+      sources.push(layer.metadata.source.id)
+    }
+  }
 
   if (layer.minzoom) {
     input.dataset.minzoom = layer.minzoom
@@ -321,7 +351,10 @@ function lcCreateLayerToggle(map, layer, checked, index) {
   input.dataset.mapLayer = true;
   if (checked) input.checked = true;
 
+  lcCheckLazyLoading(map, input)
+
   input.onclick = function () {
+    lcCheckLazyLoading(map, this)
     lcSetActiveLayers(this.id, this.checked)
     lcSetLegendVisibility(this)
     lcSetDirectoryLayerCount(this);
@@ -370,7 +403,28 @@ function lcCreateLayerToggle(map, layer, checked, index) {
 
   div.appendChild(legend);
 
-  return div
+  return { layerSelector: div, newSources: sources }
+}
+
+function lcCheckLazyLoading(map, layer) {
+  if (layer.dataset.lazyLoading && layer.checked && !layer.dataset.sourceLoaded) {
+    const source = map.getSource(layer.dataset.source);
+    if (!source) return
+    //not sure if using this internal property is the best way to check for this information
+    //if multiple layers are using the same data, we could be fetching data as another data is also being fetched
+    //maybe keep an internal variable of sources loaded to not load the same souce twice
+    if (!source._data.features.length) {
+      const loading = loadingIcon(map)
+      fetch(layer.dataset.sourceData)
+      .then(res => res.json())
+      .then(data => {
+        map.getSource(layer.dataset.source).setData(data);
+        loading.style.display = "none";
+        loading.remove();
+        layer.setAttribute('data-source-loaded', true)
+      })
+    }
+  };
 }
 
 function lcSetDirectoryLayerCount(e) {
@@ -414,7 +468,7 @@ function lcCreateDicrectory(directoryName, layerCount) {
   counter.innerText = (!layerCount) ? "" : layerCount
   counter.style.float = "right";
   counter.style.color = "white";
-  counter.style.padding = "1px 4px";
+  counter.style.padding = "1px 4px 0";
   d.appendChild(counter)
 
   accordian.appendChild(d);
@@ -563,18 +617,18 @@ function filterModal(map, layer) {
       var filter = buildFilter(new FormData(form), layer);
       console.log(filter)
       if (!filter) {
-        layer.metadata.layers.map(l => {
+        layer.metadata.layers.forEach(l => {
           map.setFilter(l)
         })
       }else{
-        layer.metadata.layers.map(l => {
+        layer.metadata.layers.forEach(l => {
           map.setFilter(l, filter)
         })
       }
     });
 
     form.addEventListener("reset", function(e) {
-      layer.metadata.layers.map(l => {
+      layer.metadata.layers.forEach(l => {
         map.setFilter(l)
       })
     })
@@ -657,7 +711,44 @@ function createFormFields(schema) {
   return html
 }
 
-
 function filterIcon() {
   return `<svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24"><g><path d="M0,0h24 M24,24H0" fill="none"/><path d="M4.25,5.61C6.27,8.2,10,13,10,13v6c0,0.55,0.45,1,1,1h2c0.55,0,1-0.45,1-1v-6c0,0,3.72-4.8,5.74-7.39 C20.25,4.95,19.78,4,18.95,4H5.04C4.21,4,3.74,4.95,4.25,5.61z"/><path d="M0,0h24v24H0V0z" fill="none"/></g></svg>`
+}
+
+function loadingIcon(map) {
+  const svg = `<svg version="1.1" id="L9" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+    viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+      <path fill="#fff" d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
+        <animateTransform 
+          attributeName="transform" 
+          attributeType="XML" 
+          type="rotate"
+          dur="0.6s" 
+          from="0 50 50"
+          to="360 50 50" 
+          repeatCount="indefinite" />
+    </path>
+  </svg>`
+  const background = document.createElement("div");
+  background.style.position = "absolute";
+  background.style.top = 0;
+  background.style.left = 0;
+  background.style.bottom = 0;
+  background.style.zIndex = 1;
+  background.style.width = "100%"
+  background.style.background = "rgba(255,255,255,0.5)"
+
+  let div = document.createElement("div");
+  div.innerHTML = svg;
+  div.style.position = "absolute"
+  div.style.display = "block";
+  div.style.top = "50%";
+  div.style.left = "50%";
+  div.style.width = "120px";
+  div.style.height = "120px";
+  div.style.transform = "translate(-50%, -50%)";
+  background.appendChild(div)
+  map.getContainer().appendChild(background);
+
+  return background
 }

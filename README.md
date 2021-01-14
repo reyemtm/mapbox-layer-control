@@ -3,11 +3,58 @@
 
 ![](mgl-lc-grouped.gif)
 
-#### [Grouped Demo](https://reyemtm.github.io/mapbox-layer-control/example/grouped.html?rivers=true&riversCase=true&States=true&states-fill=true&Counties=true#4.11/38.61/-96.05)
+#### [Grouped Demo](https://reyemtm.github.io/mapbox-layer-control/example/grouped.html?rivers=true&riversCase=true&States=true&states-fill=true#4.11/38.61/-96.05)
+
+#### [Sidebar Demo](https://reyemtm.github.io/mapbox-layer-control/example/grouped.html)
 
 #### [Simple Demo](https://reyemtm.github.io/mapbox-layer-control/example/simple.html)
 
+This is a simple layer control for Mapbox GL JS/MapLibre maps inspired by the Gartrell Group legend control. The layers need to already exist in the map. Each layer should only be added once to the control. The control does not affect map layer indexing. The layers should be added to the control in the same order that they have been added to the map (meaning the top layer is added last). The control simply adjusts the visibility layout property of the layer. In the grouped control, the group name toggles all the layers in the group. The control can have hidden layers that get toggled just like other layers. Layers have legends added automatically if they are a line, circle or fill with a single color. They can also have legend written in HTML.
+
+Ideally the config for the layer control and for the opertational layers would be one and the same. The control will add url parameters for any layers turned on, allowing the map state to be shared. If this functionality is desired it is best to leave all layers off initially ("visibility": "none") and let the control turn them on with query parameters, as this function will not turn off layers that are initially visible.
+
+**Legends use font-awesome.**
+
 *This is very much in development and may change without notice.*
+
+
+### version 0.1.0
+- This version adds support for lazy loading of geojson sources, meaning the geojson is loaded the first time the layer is turned on.
+  - To enable lazy loading the layer config needs to have the source in the metadata, and lazyLoading set to true.
+  - The original layer source also needs to be added as a blank geojson feature collection.
+  - Since multiple layers can share the same source, the metadata source object only needs to be added to one of the layers in the config.
+  - Why? Where I use this in production I am loading many small geojson files and want to improve the inital load time of the map.
+  - In the Grouped Demo, Counties and Rivers both have lazy loading turned on.
+```JavaScript
+map.addSource('sanitary-lines-source', {
+  'type': 'geojson',
+  'data': {
+    type: "FeatureCollection",
+    features: []
+  }
+});
+
+const layerControlConfig = {
+  collapsed: true,
+  layers: [{
+    id: "sewer-lines-case",
+    directory: "Utilities",
+    group: "Sanitary Sewer",
+    hidden: true, //used for then this is a child of a parent layer
+    parent: "sewer-lines", //optional, used to set the parent layer on the children
+    children: false, //optional, used for the parent layer
+    metadata: { //metadata for optional settings
+      lazyLoading: true,
+      source: {
+        id: "sanitary-lines-source", //source of layer already added
+        type: "geojson",
+        data: 'sanitary-lines.geojson'
+      }
+    }
+  }]
+}
+```
+
 
 ### version 0.0.8
 - For the date filter to work the date field format has to be in ``yyyy/MM/dd`` or Epoch time.
@@ -57,14 +104,6 @@
   }
 }
 ```
-
-
-
-This is a simple layer control for Mapbox GL JS maps inspired by the Gartrell Group legend control. The layers need to already exist in the map. Each layer should only be added once to the control. The control does not control map layer indexing. The layers should be added to the control in the same order that they have been added to the map (meaning the top layer is added last). The control simply adjusts the visibility layout property of the layer. In the grouped control, the group name toggles all the layers in the group. The control can have hidden layers that get toggled just like other layers. Layers have legends added automatically if they are a line, circle or fill with a single color. They can also have legend written in HTML.
-
-Ideally one would add the operational layers to the map and the layers to this control with a master layer config JSON file. The control will also add url parameters for any layers turned on, allowing the map state to be shared. If this functionality is desired it is best to leave all layers off initially and let the control turn them on with query parameters, as this function will not turn off layers that are initially visible.
-
-**Legends use font-awesome.**
 
 To Do:
 

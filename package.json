@@ -1,7 +1,7 @@
 {
   "name": "mapbox-layer-control",
-  "version": "0.0.95",
-  "description": "A simple Mapbox GL JS layer control.",
+  "version": "0.1.0",
+  "description": "A simple Mapbox GL JS layer control with filter capabilities and lazy loading of geojson sources.",
   "main": "layerControlGrouped.js",
   "directories": {
     "example": "example",

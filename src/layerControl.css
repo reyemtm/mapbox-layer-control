@@ -61,6 +61,7 @@
   .mgl-layerControl:not(.collapsed) {
     height: auto;
     width:  calc(100% + 20px);
+    max-width: 100%;
     overflow-x: hidden;
     display: block;
     overflow-y: auto;
@@ -74,14 +75,14 @@
   }
   .mgl-layerControlGroupHeading {
     font-weight: 600;
-    font-size: 18px;
+    font-size: 1em;
     cursor: pointer;
     display: inline-flex;
   }
 
   .mgl-layerControl button {
     width: 30px;
-    height: 30px;
+    height: 26px;
     border: none;
     opacity: 0.6;
     float: left;
@@ -102,7 +103,6 @@
   .mgl-layerControlLegend:not(label) {
     margin-left: 20px;
     max-width: calc(100% - 32px);
-    font-size: 14px;
     line-height: 20px;
   }
 
@@ -114,9 +114,8 @@
   }
 
   .mgl-layerControlDirectory > .directory {
-    font-size: 18px;
     background: #f8f9fa;
-    padding: 5px;
+    padding: 2px;
     cursor: pointer;
   }
 
@@ -128,70 +127,9 @@
   }
 
   .mgl-layerControl .checkbox {
-    margin: 6px 4px;
+    font-size: 0.9em;
+    margin: 4px;
   }
-  /*https://codepen.io/takeradi/pen/rjJpKK*/
-
-  /* .checkbox input[type="checkbox"] {
-    opacity: 0;
-    width: 0;
-  }
-
-  .checkbox input[type="checkbox"] {
-    opacity: 0;
-    width: 0;
-  }
-
-  .checkbox label {
-    position: relative;
-    display: inline-block;
-    padding-left: 22px;
-  }
-
-  .checkbox label::before,
-  .checkbox label::after {
-    position: absolute;
-    content: "";
-    display: inline-block;
-  }
-
-  .checkbox label::before {
-    height: 14px;
-    width: 14px;
-    border: 1px solid;
-    border-radius: 2px;
-    left: 0px;
-    top: 3px;
-  }
-
-  .checkbox label::after {
-    height: 4px;
-    width: 9px;
-    border-left: 2px solid;
-    border-bottom: 2px solid;
-
-    transform: rotate(-45deg);
-
-    left: 3px;
-    top: 7px;
-  }
-
-  .checkbox input[type="checkbox"]+label::after {
-    content: none;
-    color: white;
-  }
-
-  .checkbox input[type="checkbox"]:checked+label::after {
-    content: "";
-  }
-
-  .checkbox input[type="checkbox"]:checked+label::before {
-    background: #121212;
-  }
-
-  .checkbox input[type="checkbox"]:focus+label::before {
-    outline: rgb(59, 153, 252) auto 5px;
-  } */
 
   /****
 INPUT SLIDERS
@@ -204,10 +142,10 @@ input.slide-toggle {
   position: relative;
   -webkit-appearance: none;
   outline: none;
-  width: 26px;
-  height: 10px;
+  width: 24px;
+  height: 11px;
   background-color: #eee;
-  border-radius: 25px;
+  border-radius: 2px;
   transition: 0.2s;
   background-clip: padding-box;
 }
@@ -215,16 +153,20 @@ input.slide-toggle {
 input.slide-toggle:after {
   content: "";
   position: absolute;
-  top: -2px;
+  top: 0px;
   left: 0px;
   background: #fff;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  box-shadow: 0 0 1px 2px #ccc;
+  width: 9px;
+  height: 9px;
+  border-radius: 1px;
+  box-shadow: 0 0 1px 1px #ccc;
   transition: 0.2s;
 }
 
+input.slide-toggle:checked:after {
+  left: 14px;
+  box-shadow: 0 0 1px 1px #0d84b3;
+}
 input.slide-toggle:focus {
   border-color: #0d84b3; 
   box-shadow: 0 0 0 0.1rem rgba(13,132,179,.2);
@@ -234,12 +176,6 @@ input.slide-toggle:checked {
   background: #0d84b3;
   border-color: #0d84b3;
 }
-
-input.slide-toggle:checked:after {
-  left: 14px;
-  box-shadow: 0 0 1px 2px #0d84b3;
-}
-
 /**
 SPECTRE MODAL
 **/

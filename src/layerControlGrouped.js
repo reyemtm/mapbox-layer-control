@@ -266,7 +266,12 @@ export class layerControlGrouped {
           e.target.parentElement.children[0].className = ""
         }
         domHelper.ToggleChildren(e.target.parentElement, 2)
-
+        setTimeout(function() {
+          window.location.hash = e.target.id;
+        },410);
+        setTimeout(function() {
+          _this._map.resize()
+        },420)
         return
       }
     })
@@ -456,7 +461,7 @@ function lcCreateDicrectory(directoryName, layerCount) {
 
   let d = document.createElement("div");
   d.className = "directory"
-  d.id = directoryName.replace(" ", "");
+  d.id = directoryName.replace(/ /g, "_");
   d.innerText = directoryName;
   d.dataset.name = directoryName;
   d.dataset.directoryToggle = true
@@ -494,7 +499,7 @@ function lcCreateGroup(group, layers, map) {
 
   let titleInput = document.createElement("input");
   titleInput.type = "checkbox";
-  let titleInputId = "layerGroup_" + group.replace(" ", "");
+  let titleInputId = "layerGroup_" + group.replace(/ /g, "_");
   titleInput.id = titleInputId;
   titleInput.style.display = "none";
   titleInput.dataset.layergroup = group;
@@ -583,7 +588,7 @@ function lcSetLegendVisibility(e) {
 
 function filterModal(map, layer) {
   console.log(layer)
-  var id = layer.id + "FilterModal";
+  var id = layer.id + "_FilterModal";
   if (!document.getElementById(id)) {
     var modal = document.createElement("div");
     modal.id = id;
@@ -647,7 +652,7 @@ function buildFilter(data, layer) {
   const fields = [...data.keys()];
   const values = [...data.values()];
 
-  // console.log(fields[0], values[0])
+  // console.log(fields, values)
 
   var filter = [];
 
@@ -659,6 +664,9 @@ function buildFilter(data, layer) {
       filterValue = new Date(filterValue + "T00:00:00").getTime();
       // console.log(filterValue, new Date(filterValue))
     }
+    console.log(filterValue);
+    //TODO ADD LOGIC FOR WHEN USING MULTIPLE IN SELECT OPTIONS - SHOULD BE ANOTHER ARRAY WITH 'IN' OPERATOR THEN THE == OPERATOR
+    //MAYBE IF fields[i] === fields[i-1] then assume the multiple operator and use that, else do what we are currently doing
     switch (layer.metadata.filterSchema[fields[i]].type) {
       case "date" : filter.push([values[i + 1], ["get", fields[i] ], filterValue]); break;
       case "number" : filter.push([values[i + 1], ["get", fields[i] ], Number(filterValue) ]); break;

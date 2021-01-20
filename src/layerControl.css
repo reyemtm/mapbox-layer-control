@@ -35,6 +35,7 @@
 
   .mgl-layerControl {
     font-size: 16px;
+    scroll-behavior: smooth;
   }
 
   /****
@@ -143,7 +144,7 @@ input.slide-toggle {
   -webkit-appearance: none;
   outline: none;
   width: 24px;
-  height: 11px;
+  height: 10px;
   background-color: #eee;
   border-radius: 2px;
   transition: 0.2s;
@@ -156,8 +157,8 @@ input.slide-toggle:after {
   top: 0px;
   left: 0px;
   background: #fff;
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   border-radius: 1px;
   box-shadow: 0 0 1px 1px #ccc;
   transition: 0.2s;

@@ -213,7 +213,21 @@
           'line-width': 3
         }
       });
-
+      mglMap.addLayer({
+        'id': 'RailCase',
+        'type': 'line',
+        'source': {
+          type: "geojson",
+          data: "rail.geojson"
+        },
+        'layout': {
+          'visibility': 'none'
+        },
+        'paint': {
+          'line-color': "white",
+          'line-width': 6
+        }
+      });
       mglMap.addLayer({
         'id': 'Rail',
         'type': 'line',
@@ -235,6 +249,8 @@
           'line-width': 3
         }
       });
+
+
 
       var config = {
         collapsed: false,
@@ -337,6 +353,15 @@
           {
             id: "Rail",
             hidden: false,
+            children: true,
+            directory: "Cultural",
+            legend: "<icon class='fa fa-minus' style='color:red;'></icon> Legend defined in config<br><icon class='fa fa-minus' style='color:black;'></icon> Toggles when layer is off"
+          },
+          {
+            id: "RailCase",
+            hidden: false,
+            parent: "Rail",
+            hidden: true,
             directory: "Cultural",
             legend: "<icon class='fa fa-minus' style='color:red;'></icon> Legend defined in config<br><icon class='fa fa-minus' style='color:black;'></icon> Toggles when layer is off"
           }

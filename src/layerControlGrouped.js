@@ -127,9 +127,26 @@ export class layerControlGrouped {
     // SETUP MAIN MAPBOX CONTROL
     this._div = lcCreateButton(this._collapsed);
 
-    // GET THE MAP LAYERS AND LAYER IDS
-    mglHelper.GetActiveLayers(this._map, this._layers)
+    // GET THE MAP LAYERS AND LAYER IDS AND SET TO VISIBLE ANY LAYER IDS IN THE QUERY PARAMS, AND ADD THEM TO THE QUERY PARAMS IF MISSING
+    const activeLayers = mglHelper.GetActiveLayers(this._map, this._layers);
 
+    this._layers.forEach(l => {
+
+      // CHECK TO MAKE SURE ALL CHILDREN ARE ACTIVE IF PARENT IS ACTIVE
+      if (l.parent && activeLayers.includes(l.parent)) {
+        map.setLayoutProperty(l.id, "visibility", "visible");
+        lcSetActiveLayers(l.id, true)
+      }
+
+      //NO ORPHANED CHILDREN
+      if (l.parent && activeLayers.includes(l.id) && !activeLayers.includes(l.parent)) {
+        map.setLayoutProperty(l.id, "visibility", "none");
+        map.setLayoutProperty(l.parent, "visibility", "none");
+        lcSetActiveLayers(l.id, false)
+      }
+    })
+
+    this._activeLayers = mglHelper.GetActiveLayers(this._map, this._layers)
     this._mapLayers = this._map.getStyle().layers;
     this._mapLayerIds = mglHelper.GetMapLayerIds(this._mapLayers);
 
@@ -168,7 +185,11 @@ export class layerControlGrouped {
           if (!layer.legend && style) {
             layer.simpleLegend = lcCreateLegend(style)
           }
-          let checked = mglHelper.GetLayerVisibility(this._mapLayers, this._mapLayerIds, layer.id);
+          let checked;
+          checked = mglHelper.GetLayerVisibility(this._mapLayers, this._mapLayerIds, layer.id);
+          // if (layer.parent) {
+          //   checked = mglHelper.GetLayerVisibility(this._mapLayers, this._mapLayerIds, layer.parent);
+          // }
           let { layerSelector, newSources } = lcCreateLayerToggle(this._map, layer, checked, this._sources);
           this._sources = newSources;
           groupDiv.appendChild(layerSelector)
@@ -299,6 +320,7 @@ export class layerControlGrouped {
 
     return this._div;
   }
+
   onRemove(map) {
     this._map = map;
     this._div.parentNode.removeChild(this._div);
@@ -329,7 +351,7 @@ function lcCreateLayerToggle(map, layer, checked, sources) {
   if (layer.metadata.lazyLoading && layer.metadata.source && layer.metadata.source.id && layer.metadata.source.type && layer.metadata.source.data) {
     //only add the source to one layer to avoid loading the same file simultaneously
     if (!sources.includes(layer.metadata.source.id)) {
-      console.log("adding lazy loading info for", layer.id)
+      // console.log("adding lazy loading info for", layer.id)
       input.dataset.lazyLoading = true;
       input.dataset.source = layer.metadata.source.id
       input.dataset.sourceType = layer.metadata.source.type
@@ -356,7 +378,7 @@ function lcCreateLayerToggle(map, layer, checked, sources) {
   input.dataset.mapLayer = true;
   if (checked) input.checked = true;
 
-  lcCheckLazyLoading(map, input)
+  lcCheckLazyLoading(map, input);
 
   input.onclick = function () {
     lcCheckLazyLoading(map, this)

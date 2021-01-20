@@ -16,6 +16,7 @@ function GetActiveLayers(map, layers) {
       }
     }
   });
+  return _layers
 }
 
 function SetLayerVisibility(m, checked, layer) {

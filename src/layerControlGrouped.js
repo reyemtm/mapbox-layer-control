@@ -349,15 +349,15 @@ function lcCreateLayerToggle(map, layer, checked, sources) {
   input.dataset.group = (layer.group) ? layer.group : false;
 
   if (layer.metadata.lazyLoading && layer.metadata.source && layer.metadata.source.id && layer.metadata.source.type && layer.metadata.source.data) {
-    //only add the source to one layer to avoid loading the same file simultaneously
-    if (!sources.includes(layer.metadata.source.id)) {
+    //only add the source to one layer to avoid loading the same file simultaneously - not really working...need to do this per layer group
+    // if (!sources.includes()) {
       // console.log("adding lazy loading info for", layer.id)
       input.dataset.lazyLoading = true;
       input.dataset.source = layer.metadata.source.id
       input.dataset.sourceType = layer.metadata.source.type
       input.dataset.sourceData = layer.metadata.source.data
       sources.push(layer.metadata.source.id)
-    }
+    // }
   }
 
   if (layer.minzoom) {
@@ -442,10 +442,16 @@ function lcCheckLazyLoading(map, layer) {
     //maybe keep an internal variable of sources loaded to not load the same souce twice
     if (!source._data.features.length) {
       const loading = loadingIcon(map)
-      fetch(layer.dataset.sourceData)
+      fetch(layer.dataset.sourceData, {
+        cache: "force-cache"
+      })
       .then(res => res.json())
       .then(data => {
-        map.getSource(layer.dataset.source).setData(data);
+        //CHECK SOURCE AGAIN
+        const newSource = map.getSource(layer.dataset.source);
+        if (!newSource._data.features.length) {
+          map.getSource(layer.dataset.source).setData(data);
+        }
         loading.style.display = "none";
         loading.remove();
         layer.setAttribute('data-source-loaded', true)

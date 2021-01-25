@@ -449,7 +449,8 @@ function lcCheckLazyLoading(map, layer) {
       .then(data => {
         //CHECK SOURCE AGAIN
         const newSource = map.getSource(layer.dataset.source);
-        if (!newSource._data.features.length) {
+        console.log(newSource)
+        if ((newSource._data.features && !newSource._data.features.length) || (newSource._data.geometries && !newSource._data.geometries.length)) {
           map.getSource(layer.dataset.source).setData(data);
         }
         loading.style.display = "none";

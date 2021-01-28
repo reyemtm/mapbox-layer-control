@@ -287,12 +287,15 @@ export class layerControlGrouped {
           e.target.parentElement.children[0].className = ""
         }
         domHelper.ToggleChildren(e.target.parentElement, 2)
+
         setTimeout(function() {
-          window.location.hash = e.target.id;
+          if (!isScrolledIntoView(e.target.parentElement)) {
+            window.location.hash = e.target.id;
+          }
         },410);
         setTimeout(function() {
           _this._map.resize()
-        },420)
+        },450)
         return
       }
     })
@@ -449,7 +452,6 @@ function lcCheckLazyLoading(map, layer) {
       .then(data => {
         //CHECK SOURCE AGAIN
         const newSource = map.getSource(layer.dataset.source);
-        console.log(newSource)
         if ((newSource._data.features && !newSource._data.features.length) || (newSource._data.geometries && !newSource._data.geometries.length)) {
           map.getSource(layer.dataset.source).setData(data);
         }
@@ -788,4 +790,14 @@ function loadingIcon(map) {
   map.getContainer().appendChild(background);
 
   return background
+}
+
+function isScrolledIntoView(el) {
+  var rect = el.getBoundingClientRect();
+  var elemTop = rect.top;
+  var elemBottom = rect.bottom;
+  var isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight);
+  // Partially visible elements return true:
+  //isVisible = elemTop < window.innerHeight && elemBottom >= 0;
+  return isVisible;
 }

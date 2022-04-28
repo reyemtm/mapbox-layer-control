@@ -379,6 +379,7 @@ function lcCreateLayerToggle(map, layer, checked, sources) {
 
   input.className = "layer slide-toggle";
   input.dataset.mapLayer = true;
+  input.dataset.directory = !layer.directory ? "" : layer.directory
   if (checked) input.checked = true;
 
   lcCheckLazyLoading(map, input);
